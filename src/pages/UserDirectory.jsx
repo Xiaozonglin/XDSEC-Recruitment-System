@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listUsers } from "../api/users.js";
+import { gravatarUrl } from "../utils/gravatar.js";
 
 export default function UserDirectory() {
   const [role, setRole] = useState("interviewee");
@@ -32,8 +33,17 @@ export default function UserDirectory() {
       <div className="grid two">
         {items.map((user) => (
           <article key={user.id} className="card">
-            <h3>{user.nickname || "Anonymous"}</h3>
-            <p className="meta">{user.signature || "No signature"}</p>
+            <div className="row">
+              <img
+                className="avatar"
+                src={gravatarUrl(user.email, 72)}
+                alt={user.nickname || "avatar"}
+              />
+              <div>
+                <h3>{user.nickname || "Anonymous"}</h3>
+                <p className="meta">{user.signature || "No signature"}</p>
+              </div>
+            </div>
             {user.directions && (
               <p>Directions: {(user.directions || []).join(", ")}</p>
             )}

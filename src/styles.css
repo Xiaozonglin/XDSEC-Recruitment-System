@@ -128,6 +128,13 @@ button:disabled {
   box-shadow: 0 6px 20px rgba(15, 30, 70, 0.08);
 }
 
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .card.pinned {
   border: 2px solid #f1a50f;
 }

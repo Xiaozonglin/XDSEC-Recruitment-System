@@ -1,7 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import * as authApi from "../api/auth.js";
+import { clearToken } from "../api/client.js";
 
 const AuthContext = createContext(null);
+const USER_KEY = "xdsec_user";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -10,9 +12,20 @@ export function AuthProvider({ children }) {
   const refresh = useCallback(async () => {
     try {
       const data = await authApi.me();
-      setUser(data.user || null);
+      const stored = window.localStorage.getItem(USER_KEY);
+      const cached = stored ? JSON.parse(stored) : null;
+      const current = data?.data?.user || null;
+      const merged =
+        current && cached && cached.email === current.email
+          ? { ...cached, ...current }
+          : current;
+      setUser(merged);
+      if (merged) {
+        window.localStorage.setItem(USER_KEY, JSON.stringify(merged));
+      }
     } catch (error) {
       setUser(null);
+      clearToken();
     } finally {
       setLoading(false);
     }
@@ -24,13 +37,18 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (payload) => {
     const data = await authApi.login(payload);
-    setUser(data.user);
+    const nextUser = data?.data?.userInfo || null;
+    setUser(nextUser);
+    if (nextUser) {
+      window.localStorage.setItem(USER_KEY, JSON.stringify(nextUser));
+    }
     return data;
   }, []);
 
   const logout = useCallback(async () => {
     await authApi.logout();
     setUser(null);
+    window.localStorage.removeItem(USER_KEY);
   }, []);
 
   const value = useMemo(

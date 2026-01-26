@@ -2,7 +2,46 @@ import { request } from "./client.js";
 
 export function listUsers(params = {}) {
   const query = new URLSearchParams(params).toString();
-  return request(`/users${query ? `?${query}` : ""}`);
+  return request(`/users/${query ? `?${query}` : ""}`).then((data) => {
+    const items = data?.data?.users || [];
+    return {
+      ...data,
+      items: items.map((user) => normalizeUser(user))
+    };
+  });
+}
+
+function parseJsonField(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return [];
+  }
+}
+
+function normalizeUser(user) {
+  const application = user.application
+    ? {
+        realName: user.application.real_name || user.application.realName,
+        phone: user.application.phone,
+        gender: user.application.gender,
+        department: user.application.department,
+        major: user.application.major,
+        studentId: user.application.student_id || user.application.studentId,
+        directions: parseJsonField(user.application.directions),
+        resume: user.application.resume
+      }
+    : null;
+
+  return {
+    ...user,
+    id: user.uuid || user.id,
+    application,
+    passedDirections: parseJsonField(user.passed_directions || user.passedDirections),
+    passedDirectionsBy: user.passed_directions_by || user.passedDirectionsBy
+  };
 }
 
 export function getUser(userId) {

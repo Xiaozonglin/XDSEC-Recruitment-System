@@ -6,36 +6,22 @@ import { updateProfile } from "../api/users.js";
 export default function Profile() {
   const { user, refresh } = useAuth();
   const [profile, setProfile] = useState({
-    id: "",
     email: "",
     nickname: "",
-    signature: "",
-    emailCode: ""
+    signature: ""
   });
-  const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
+  const [passwordForm, setPasswordForm] = useState({ old_password: "", new_password: "" });
   const [status, setStatus] = useState("");
 
   useEffect(() => {
     if (user) {
       setProfile({
-        id: user.id || "",
         email: user.email || "",
         nickname: user.nickname || "",
-        signature: user.signature || "",
-        emailCode: ""
+        signature: user.signature || ""
       });
     }
   }, [user]);
-
-  const sendCode = async () => {
-    setStatus("Sending code...");
-    try {
-      await authApi.requestEmailCode({ email: profile.email, purpose: "profile" });
-      setStatus("Code sent.");
-    } catch (error) {
-      setStatus(error.message || "Failed to send code.");
-    }
-  };
 
   const onSaveProfile = async (event) => {
     event.preventDefault();
@@ -67,14 +53,6 @@ export default function Profile() {
       {status && <p className="hint">{status}</p>}
       <form onSubmit={onSaveProfile}>
         <label>
-          ID
-          <input
-            value={profile.id}
-            onChange={(event) => setProfile({ ...profile, id: event.target.value })}
-            required
-          />
-        </label>
-        <label>
           Email
           <input
             type="email"
@@ -83,19 +61,6 @@ export default function Profile() {
             required
           />
         </label>
-        <div className="row">
-          <label>
-            Email Code
-            <input
-              value={profile.emailCode}
-              onChange={(event) => setProfile({ ...profile, emailCode: event.target.value })}
-              required
-            />
-          </label>
-          <button type="button" onClick={sendCode} disabled={!profile.email}>
-            Send Code
-          </button>
-        </div>
         <label>
           Nickname
           <input
@@ -122,8 +87,8 @@ export default function Profile() {
           Old Password
           <input
             type="password"
-            value={passwordForm.oldPassword}
-            onChange={(event) => setPasswordForm({ ...passwordForm, oldPassword: event.target.value })}
+            value={passwordForm.old_password}
+            onChange={(event) => setPasswordForm({ ...passwordForm, old_password: event.target.value })}
             required
           />
         </label>
@@ -131,8 +96,8 @@ export default function Profile() {
           New Password
           <input
             type="password"
-            value={passwordForm.newPassword}
-            onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })}
+            value={passwordForm.new_password}
+            onChange={(event) => setPasswordForm({ ...passwordForm, new_password: event.target.value })}
             required
           />
         </label>

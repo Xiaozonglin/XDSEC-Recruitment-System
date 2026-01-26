@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listUsers, updateRole, updatePassedDirections } from "../api/users.js";
+import { gravatarUrl } from "../utils/gravatar.js";
 import { updateApplicationStatus } from "../api/applications.js";
 import MarkdownRenderer from "../components/MarkdownRenderer.jsx";
 
@@ -72,7 +73,7 @@ export default function CandidateList() {
       {status && <p className="hint">{status}</p>}
       <form className="row" onSubmit={onSearch}>
         <input
-          placeholder="Search by ID, name, or keyword"
+          placeholder="Search by email or nickname"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -82,9 +83,16 @@ export default function CandidateList() {
         {users.map((user) => (
           <article key={user.id} className="card">
             <header className="row">
-              <div>
-                <h3>{user.id}</h3>
-                <p className="meta">{user.nickname} · {user.status || "r1_pending"}</p>
+              <div className="row">
+                <img
+                  className="avatar"
+                  src={gravatarUrl(user.email, 72)}
+                  alt={user.nickname || "avatar"}
+                />
+                <div>
+                  <h3>{user.nickname || user.email}</h3>
+                  <p className="meta">{user.email} · {user.status || "r1_pending"}</p>
+                </div>
               </div>
               <button type="button" onClick={() => promote(user.id)}>Grant Interviewer</button>
             </header>

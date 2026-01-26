@@ -30,3 +30,6 @@ Thumbs.db
 .aider.conf
 .aider.json
 .cursor/
+
+# Backend source (local only)
+xdsec-join-2026-main/

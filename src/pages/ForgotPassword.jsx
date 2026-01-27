@@ -1,39 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as authApi from "../api/auth.js";
 
 export default function ForgotPassword() {
   const [form, setForm] = useState({ email: "", emailCode: "", newPassword: "" });
-  const [status, setStatus] = useState({ loading: false, message: "" });
+  const [status, setStatus] = useState({ message: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = window.setTimeout(() => setCooldown((prev) => prev - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
 
   const sendCode = async () => {
-    setStatus({ loading: true, message: "Sending code..." });
+    setSending(true);
+    setStatus({ message: "正在发送验证码..." });
     try {
       await authApi.requestEmailCode({ email: form.email, purpose: "reset" });
-      setStatus({ loading: false, message: "Code sent. Check your email." });
+      setCooldown(60);
+      setStatus({ message: "验证码已发送，请查看邮箱。" });
     } catch (error) {
-      setStatus({ loading: false, message: error.message || "Failed to send code." });
+      setStatus({ message: error.message || "验证码发送失败。" });
+    } finally {
+      setSending(false);
     }
   };
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setStatus({ loading: true, message: "" });
+    setSubmitting(true);
+    setStatus({ message: "" });
     try {
       await authApi.resetPassword(form);
-      setStatus({ loading: false, message: "Password updated. Please login." });
+      setStatus({ message: "密码已更新，请登录。" });
     } catch (error) {
-      setStatus({ loading: false, message: error.message || "Reset failed." });
+      setStatus({ message: error.message || "重置失败。" });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <section className="form-card">
-      <h1>Reset Password</h1>
+      <h1>重置密码</h1>
       {status.message && <p className="hint">{status.message}</p>}
       <form onSubmit={onSubmit}>
         <label>
-          Email
+          邮箱
           <input
             type="email"
             value={form.email}
@@ -43,19 +59,23 @@ export default function ForgotPassword() {
         </label>
         <div className="row">
           <label>
-            Email Code
+            邮箱验证码
             <input
               value={form.emailCode}
               onChange={(event) => setForm({ ...form, emailCode: event.target.value })}
               required
             />
           </label>
-          <button type="button" onClick={sendCode} disabled={!form.email || status.loading}>
-            Send Code
+          <button
+            type="button"
+            onClick={sendCode}
+            disabled={!form.email || sending || cooldown > 0}
+          >
+            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
           </button>
         </div>
         <label>
-          New Password
+          新密码
           <input
             type="password"
             value={form.newPassword}
@@ -63,10 +83,10 @@ export default function ForgotPassword() {
             required
           />
         </label>
-        <button type="submit" disabled={status.loading}>Update Password</button>
+        <button type="submit" disabled={submitting}>更新密码</button>
       </form>
       <div className="form-footer">
-        <Link to="/login">Back to login</Link>
+        <Link to="/login">返回登录</Link>
       </div>
     </section>
   );

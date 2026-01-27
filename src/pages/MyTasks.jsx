@@ -10,7 +10,7 @@ export default function MyTasks() {
   const loadTasks = () => {
     listTasks({ scope: "mine" })
       .then((data) => setTasks(data.items || []))
-      .catch(() => setStatus("Failed to load tasks."));
+      .catch(() => setStatus("任务加载失败。"));
   };
 
   useEffect(() => {
@@ -21,24 +21,24 @@ export default function MyTasks() {
     setStatus("");
     try {
       await submitTaskReport(taskId, { report: report[taskId] || "" });
-      setStatus("Report submitted.");
+      setStatus("报告已提交。");
       loadTasks();
     } catch (error) {
-      setStatus(error.message || "Failed to submit report.");
+      setStatus(error.message || "提交报告失败。");
     }
   };
 
   return (
     <section>
-      <h1>My Tasks</h1>
+      <h1>我的任务</h1>
       {status && <p className="hint">{status}</p>}
       {tasks.map((task) => (
         <article key={task.id} className="card">
           <h2>{task.title}</h2>
-          <div className="meta">Assigned by {task.assignedBy} · {new Date(task.createdAt).toLocaleString()}</div>
+          <div className="meta">分配人 {task.assignedBy} · {new Date(task.createdAt).toLocaleString()}</div>
           <MarkdownRenderer content={task.description} />
           <label className="full">
-            Report (Markdown)
+            报告（支持 Markdown）
             <textarea
               rows={5}
               value={report[task.id] || task.report || ""}
@@ -47,16 +47,16 @@ export default function MyTasks() {
               }
             />
           </label>
-          <button type="button" onClick={() => submitReport(task.id)}>Submit Report</button>
+          <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
           {task.report && (
             <>
-              <h3>Last Submission</h3>
+              <h3>最新提交</h3>
               <MarkdownRenderer content={task.report} />
             </>
           )}
         </article>
       ))}
-      {!tasks.length && <p>No tasks assigned yet.</p>}
+      {!tasks.length && <p>暂无任务。</p>}
     </section>
   );
 }

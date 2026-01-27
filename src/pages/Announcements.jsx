@@ -9,21 +9,21 @@ export default function Announcements() {
   useEffect(() => {
     listAnnouncements()
       .then((data) => setItems(data.items || []))
-      .catch(() => setError("Failed to load announcements."));
+      .catch(() => setError("公告加载失败。"));
   }, []);
 
   return (
     <section>
-      <h1>Announcements</h1>
+      <h1>公告</h1>
       {error && <p className="error">{error}</p>}
       {items.map((item) => (
         <article key={item.id} className={`card ${item.pinned ? "pinned" : ""}`}>
           <h2>{item.title}</h2>
-          <div className="meta">By {item.authorId} · {new Date(item.createdAt).toLocaleString()}</div>
+          <div className="meta">发布人 {item.authorNickname || "未知"} · {new Date(item.createdAt).toLocaleString()}</div>
           <MarkdownRenderer content={item.content} />
         </article>
       ))}
-      {!items.length && !error && <p>No announcements yet.</p>}
+      {!items.length && !error && <p>暂无公告。</p>}
     </section>
   );
 }

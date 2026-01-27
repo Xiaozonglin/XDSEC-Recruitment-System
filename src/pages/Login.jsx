@@ -15,17 +15,17 @@ export default function Login() {
       await login(form);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Login failed");
+      setError(err.message || "登录失败");
     }
   };
 
   return (
     <section className="form-card">
-      <h1>Login</h1>
+      <h1>登录</h1>
       {error && <p className="error">{error}</p>}
       <form onSubmit={onSubmit}>
         <label>
-          ID
+          账号（邮箱或昵称）
           <input
             value={form.id}
             onChange={(event) => setForm({ ...form, id: event.target.value })}
@@ -34,7 +34,7 @@ export default function Login() {
           />
         </label>
         <label>
-          Password
+          密码
           <input
             type="password"
             value={form.password}
@@ -43,11 +43,11 @@ export default function Login() {
             required
           />
         </label>
-        <button type="submit">Login</button>
+        <button type="submit">登录</button>
       </form>
       <div className="form-footer">
-        <Link to="/forgot-password">Forgot password?</Link>
-        <Link to="/register">Create account</Link>
+        <Link to="/forgot-password">忘记密码？</Link>
+        <Link to="/register">注册账号</Link>
       </div>
     </section>
   );

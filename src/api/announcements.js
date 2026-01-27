@@ -6,7 +6,7 @@ export function listAnnouncements() {
     items: (data?.data?.items || []).map((item) => ({
       ...item,
       id: item.uuid || item.id,
-      authorId: item.author_id || item.authorId,
+      authorNickname: item.author_nickname || item.authorNickname,
       createdAt: item.created_at || item.createdAt,
       updatedAt: item.updated_at || item.updatedAt
     }))

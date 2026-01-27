@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as authApi from "../api/auth.js";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -13,37 +13,53 @@ export default function Register() {
     signature: "",
     emailCode: ""
   });
-  const [status, setStatus] = useState({ loading: false, message: "" });
+  const [status, setStatus] = useState({ message: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = window.setTimeout(() => setCooldown((prev) => prev - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
 
   const sendCode = async () => {
-    setStatus({ loading: true, message: "Sending code..." });
+    setSending(true);
+    setStatus({ message: "正在发送验证码..." });
     try {
       await authApi.requestEmailCode({ email: form.email, purpose: "register" });
-      setStatus({ loading: false, message: "Code sent. Check your email." });
+      setCooldown(60);
+      setStatus({ message: "验证码已发送，请查看邮箱。" });
     } catch (error) {
-      setStatus({ loading: false, message: error.message || "Failed to send code." });
+      setStatus({ message: error.message || "验证码发送失败。" });
+    } finally {
+      setSending(false);
     }
   };
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    setStatus({ loading: true, message: "" });
+    setSubmitting(true);
+    setStatus({ message: "" });
     try {
       await authApi.register(form);
       await refresh();
       navigate("/login");
     } catch (error) {
-      setStatus({ loading: false, message: error.message || "Registration failed." });
+      setStatus({ message: error.message || "注册失败。" });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <section className="form-card">
-      <h1>Register</h1>
+      <h1>注册</h1>
       {status.message && <p className="hint">{status.message}</p>}
       <form onSubmit={onSubmit}>
         <label>
-          Email
+          邮箱
           <input
             type="email"
             value={form.email}
@@ -53,19 +69,23 @@ export default function Register() {
         </label>
         <div className="row">
           <label>
-            Email Code
+            邮箱验证码
             <input
               value={form.emailCode}
               onChange={(event) => setForm({ ...form, emailCode: event.target.value })}
               required
             />
           </label>
-          <button type="button" onClick={sendCode} disabled={!form.email || status.loading}>
-            Send Code
+          <button
+            type="button"
+            onClick={sendCode}
+            disabled={!form.email || sending || cooldown > 0}
+          >
+            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
           </button>
         </div>
         <label>
-          Password
+          密码
           <input
             type="password"
             value={form.password}
@@ -74,7 +94,7 @@ export default function Register() {
           />
         </label>
         <label>
-          Nickname
+          昵称
           <input
             value={form.nickname}
             onChange={(event) => setForm({ ...form, nickname: event.target.value })}
@@ -82,17 +102,17 @@ export default function Register() {
           />
         </label>
         <label>
-          Signature
+          个性签名
           <input
             value={form.signature}
             onChange={(event) => setForm({ ...form, signature: event.target.value })}
             required
           />
         </label>
-        <button type="submit" disabled={status.loading}>Register</button>
+        <button type="submit" disabled={submitting}>注册</button>
       </form>
       <div className="form-footer">
-        <Link to="/login">Already have an account?</Link>
+        <Link to="/login">已有账号？去登录</Link>
       </div>
     </section>
   );

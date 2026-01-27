@@ -12,6 +12,14 @@ const STATUSES = [
   "rejected",
   "offer"
 ];
+const STATUS_LABELS = {
+  r1_pending: "一轮待定",
+  r1_passed: "一轮通过",
+  r2_pending: "二轮待定",
+  r2_passed: "二轮通过",
+  rejected: "已拒绝",
+  offer: "已录取"
+};
 const DIRECTIONS = ["Web", "Pwn", "Reverse", "Crypto", "Misc", "Dev", "Art"];
 
 export default function CandidateList() {
@@ -23,7 +31,7 @@ export default function CandidateList() {
   const load = () => {
     listUsers({ q: query, role: "interviewee" })
       .then((data) => setUsers(data.items || []))
-      .catch(() => setStatus("Failed to load candidates."));
+      .catch(() => setStatus("候选人加载失败。"));
   };
 
   useEffect(() => {
@@ -41,17 +49,20 @@ export default function CandidateList() {
       await updateRole(userId, "interviewer");
       load();
     } catch (error) {
-      setStatus(error.message || "Failed to update role.");
+      setStatus(error.message || "设置面试官失败。");
     }
   };
 
   const removeUser = async (userId) => {
     setStatus("");
+    if (!window.confirm("确定删除该面试者吗？此操作不可恢复。")) {
+      return;
+    }
     try {
       await deleteUser(userId);
       load();
     } catch (error) {
-      setStatus(error.message || "Failed to delete user.");
+      setStatus(error.message || "删除用户失败。");
     }
   };
 
@@ -61,33 +72,36 @@ export default function CandidateList() {
       await updateApplicationStatus(userId, nextStatus);
       load();
     } catch (error) {
-      setStatus(error.message || "Failed to update status.");
+      setStatus(error.message || "更新面试状态失败。");
     }
   };
 
   const updatePassed = async (userId) => {
     setStatus("");
     const directions = passedInputs[userId] || [];
+    if (!window.confirm("一旦提交，无法修改。确认提交通过方向吗？")) {
+      return;
+    }
     try {
       await updatePassedDirections(userId, directions);
       setPassedInputs((prev) => ({ ...prev, [userId]: [] }));
       load();
     } catch (error) {
-      setStatus(error.message || "Failed to update passed directions.");
+      setStatus(error.message || "更新通过方向失败。");
     }
   };
 
   return (
     <section>
-      <h2>Candidate List</h2>
+      <h2>候选人列表</h2>
       {status && <p className="hint">{status}</p>}
       <form className="row" onSubmit={onSearch}>
         <input
-          placeholder="Search by email or nickname"
+          placeholder="按邮箱或昵称搜索"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <button type="submit">Search</button>
+        <button type="submit">搜索</button>
       </form>
       <div className="grid two">
         {users.map((user) => (
@@ -101,31 +115,33 @@ export default function CandidateList() {
                 />
                 <div>
                   <h3>{user.nickname || user.email}</h3>
-                  <p className="meta">{user.email} · {user.status || "r1_pending"}</p>
+                  <p className="meta">
+                    {user.email} · {STATUS_LABELS[user.status || "r1_pending"]}
+                  </p>
                 </div>
               </div>
-              <button type="button" onClick={() => promote(user.id)}>Grant Interviewer</button>
-              <button type="button" onClick={() => removeUser(user.id)}>Delete User</button>
+              <button type="button" onClick={() => promote(user.id)}>设为面试官</button>
+              <button type="button" onClick={() => removeUser(user.id)}>删除用户</button>
             </header>
             {user.application && (
               <div className="panel">
-                <p><strong>Real Name:</strong> {user.application.realName}</p>
-                <p><strong>Phone:</strong> {user.application.phone}</p>
-                <p><strong>Gender:</strong> {user.application.gender}</p>
-                <p><strong>Department:</strong> {user.application.department}</p>
-                <p><strong>Major:</strong> {user.application.major}</p>
-                <p><strong>Student ID:</strong> {user.application.studentId}</p>
-                <p><strong>Directions:</strong> {(user.application.directions || []).join(", ")}</p>
+                <p><strong>姓名：</strong> {user.application.realName}</p>
+                <p><strong>手机号：</strong> {user.application.phone}</p>
+                <p><strong>性别：</strong> {user.application.gender === "male" ? "男" : "女"}</p>
+                <p><strong>院系：</strong> {user.application.department}</p>
+                <p><strong>专业：</strong> {user.application.major}</p>
+                <p><strong>学号：</strong> {user.application.studentId}</p>
+                <p><strong>方向：</strong> {(user.application.directions || []).join(", ")}</p>
                 <MarkdownRenderer content={user.application.resume || ""} />
               </div>
             )}
             <div className="panel">
-              <p><strong>Passed Directions:</strong> {(user.passedDirections || []).join(", ") || "None"}</p>
+              <p><strong>已通过方向：</strong> {(user.passedDirections || []).join(", ") || "暂无"}</p>
               {user.passedDirectionsBy && user.passedDirectionsBy.length > 0 && (
-                <p className="meta">Updated by {user.passedDirectionsBy.join(", ")}</p>
+                <p className="meta">更新人：{user.passedDirectionsBy.join(", ")}</p>
               )}
               <fieldset>
-                <legend>Set passed directions</legend>
+                <legend>设置通过方向</legend>
                 <div className="tags">
                   {DIRECTIONS.map((direction) => (
                     <label key={direction} className="tag">
@@ -147,7 +163,7 @@ export default function CandidateList() {
                   ))}
                 </div>
                 <button type="button" onClick={() => updatePassed(user.id)}>
-                  Update Passed
+                  提交通过方向
                 </button>
               </fieldset>
             </div>
@@ -157,7 +173,7 @@ export default function CandidateList() {
                 onChange={(event) => updateStatus(user.id, event.target.value)}
               >
                 {STATUSES.map((item) => (
-                  <option key={item} value={item}>{item}</option>
+                  <option key={item} value={item}>{STATUS_LABELS[item]}</option>
                 ))}
               </select>
             </div>

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import * as authApi from "../api/auth.js";
-import { updateProfile } from "../api/users.js";
+import { updateProfile, deleteMe } from "../api/users.js";
 
 export default function Profile() {
-  const { user, refresh } = useAuth();
+  const { user, refresh, logout } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState({
     email: "",
     nickname: "",
@@ -13,6 +15,14 @@ export default function Profile() {
   });
   const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
   const [status, setStatus] = useState("");
+  const [sending, setSending] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = window.setTimeout(() => setCooldown((prev) => prev - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [cooldown]);
 
   useEffect(() => {
     if (user) {
@@ -26,12 +36,16 @@ export default function Profile() {
   }, [user]);
 
   const sendCode = async () => {
-    setStatus("Sending code...");
+    setSending(true);
+    setStatus("正在发送验证码...");
     try {
       await authApi.requestEmailCode({ email: profile.email, purpose: "profile" });
-      setStatus("Code sent.");
+      setCooldown(60);
+      setStatus("验证码已发送。");
     } catch (error) {
-      setStatus(error.message || "Failed to send code.");
+      setStatus(error.message || "验证码发送失败。");
+    } finally {
+      setSending(false);
     }
   };
   const onSaveProfile = async (event) => {
@@ -40,9 +54,9 @@ export default function Profile() {
     try {
       await updateProfile(profile);
       await refresh();
-      setStatus("Profile updated.");
+      setStatus("个人资料已更新。");
     } catch (error) {
-      setStatus(error.message || "Failed to update profile.");
+      setStatus(error.message || "更新个人资料失败。");
     }
   };
 
@@ -52,19 +66,33 @@ export default function Profile() {
     try {
       await authApi.changePassword(passwordForm);
       setPasswordForm({ oldPassword: "", newPassword: "" });
-      setStatus("Password updated.");
+      setStatus("密码已更新。");
     } catch (error) {
-      setStatus(error.message || "Failed to change password.");
+      setStatus(error.message || "修改密码失败。");
+    }
+  };
+
+  const onDeleteAccount = async () => {
+    setStatus("");
+    if (!window.confirm("确定删除账号吗？此操作不可恢复。")) {
+      return;
+    }
+    try {
+      await deleteMe();
+      await logout();
+      navigate("/register");
+    } catch (error) {
+      setStatus(error.message || "删除账号失败。");
     }
   };
 
   return (
     <section className="form-card">
-      <h1>Profile</h1>
+      <h1>个人资料</h1>
       {status && <p className="hint">{status}</p>}
       <form onSubmit={onSaveProfile}>
         <label>
-          Email
+          邮箱
           <input
             type="email"
             value={profile.email}
@@ -74,19 +102,23 @@ export default function Profile() {
         </label>
         <div className="row">
           <label>
-            Email Code
+            邮箱验证码
             <input
               value={profile.emailCode}
               onChange={(event) => setProfile({ ...profile, emailCode: event.target.value })}
               required
             />
           </label>
-          <button type="button" onClick={sendCode} disabled={!profile.email}>
-            Send Code
+          <button
+            type="button"
+            onClick={sendCode}
+            disabled={!profile.email || sending || cooldown > 0}
+          >
+            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
           </button>
         </div>
         <label>
-          Nickname
+          昵称
           <input
             value={profile.nickname}
             onChange={(event) => setProfile({ ...profile, nickname: event.target.value })}
@@ -94,21 +126,21 @@ export default function Profile() {
           />
         </label>
         <label>
-          Signature
+          个性签名
           <input
             value={profile.signature}
             onChange={(event) => setProfile({ ...profile, signature: event.target.value })}
           />
         </label>
-        <button type="submit">Save Profile</button>
+        <button type="submit">保存资料</button>
       </form>
 
       <div className="divider" />
 
       <form onSubmit={onChangePassword}>
-        <h2>Change Password</h2>
+        <h2>修改密码</h2>
         <label>
-          Old Password
+          旧密码
           <input
             type="password"
             value={passwordForm.oldPassword}
@@ -117,7 +149,7 @@ export default function Profile() {
           />
         </label>
         <label>
-          New Password
+          新密码
           <input
             type="password"
             value={passwordForm.newPassword}
@@ -125,8 +157,16 @@ export default function Profile() {
             required
           />
         </label>
-        <button type="submit">Update Password</button>
+        <button type="submit">更新密码</button>
       </form>
+
+      <div className="divider" />
+
+      <div>
+        <h2>注销账号</h2>
+        <p className="meta">此操作将删除你的账号与所有数据，无法恢复。</p>
+        <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
+      </div>
     </section>
   );
 }

@@ -6,11 +6,19 @@ export default function UserDirectory() {
   const [role, setRole] = useState("interviewee");
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("");
+  const statusLabels = {
+    r1_pending: "一轮待定",
+    r1_passed: "一轮通过",
+    r2_pending: "二轮待定",
+    r2_passed: "二轮通过",
+    rejected: "已拒绝",
+    offer: "已录取"
+  };
 
   const load = () => {
     listUsers({ role })
       .then((data) => setItems(data.items || []))
-      .catch(() => setStatus("Failed to load users."));
+      .catch(() => setStatus("成员加载失败。"));
   };
 
   useEffect(() => {
@@ -19,14 +27,14 @@ export default function UserDirectory() {
 
   return (
     <section>
-      <h1>User Directory</h1>
+      <h1>成员目录</h1>
       {status && <p className="hint">{status}</p>}
       <div className="row">
         <label>
-          Role
+          角色
           <select value={role} onChange={(event) => setRole(event.target.value)}>
-            <option value="interviewee">Interviewee</option>
-            <option value="interviewer">Interviewer</option>
+            <option value="interviewee">面试者</option>
+            <option value="interviewer">面试官</option>
           </select>
         </label>
       </div>
@@ -40,17 +48,17 @@ export default function UserDirectory() {
                 alt={user.nickname || "avatar"}
               />
               <div>
-                <h3>{user.nickname || "Anonymous"}</h3>
-                <p className="meta">{user.signature || "No signature"}</p>
+                <h3>{user.nickname || "匿名用户"}</h3>
+                <p className="meta">{user.signature || "暂无个性签名"}</p>
               </div>
             </div>
             {user.directions && (
-              <p>Directions: {(user.directions || []).join(", ")}</p>
+              <p>方向：{(user.directions || []).join(", ")}</p>
             )}
             {user.passedDirections && (
-              <p>Passed: {(user.passedDirections || []).join(", ")}</p>
+              <p>通过方向：{(user.passedDirections || []).join(", ")}</p>
             )}
-            {user.status && <p>Status: {user.status}</p>}
+            {user.status && <p>状态：{statusLabels[user.status] || user.status}</p>}
           </article>
         ))}
       </div>

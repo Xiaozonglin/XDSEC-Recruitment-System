@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children, allowRoles }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="container">Loading...</div>;
+    return <div className="container">加载中...</div>;
   }
 
   if (!user) {

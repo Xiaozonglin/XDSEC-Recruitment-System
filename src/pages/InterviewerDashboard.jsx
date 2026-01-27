@@ -4,13 +4,13 @@ import { Link, Outlet } from "react-router-dom";
 export default function InterviewerDashboard() {
   return (
     <section>
-      <h1>Interviewer Console</h1>
+      <h1>面试官控制台</h1>
       <div className="subnav">
-        <Link to="announcements">Announcements</Link>
-        <Link to="candidates">Candidates</Link>
-        <Link to="tasks">Tasks</Link>
+        <Link to="announcements">公告</Link>
+        <Link to="candidates">候选人</Link>
+        <Link to="tasks">任务</Link>
         <a href="/api/v2/export/applications" target="_blank" rel="noreferrer">
-          Export Applications
+          导出申请
         </a>
       </div>
       <Outlet />

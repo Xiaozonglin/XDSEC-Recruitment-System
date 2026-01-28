@@ -38,6 +38,11 @@ export default function CandidateList() {
     load();
   }, []);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => load(), 300);
+    return () => window.clearTimeout(timer);
+  }, [query]);
+
   const onSearch = (event) => {
     event.preventDefault();
     load();
@@ -101,15 +106,15 @@ export default function CandidateList() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <button type="submit">搜索</button>
+        <button type="submit" className="nowrap">搜索</button>
       </form>
       <div className="grid two">
         {users.map((user) => (
           <article key={user.id} className="card">
-            <header className="row">
-              <div className="row">
+            <header className="row candidate-header">
+              <div className="row candidate-main">
                 <img
-                  className="avatar"
+                  className="avatar candidate-avatar"
                   src={gravatarUrl(user.email, 72)}
                   alt={user.nickname || "avatar"}
                 />

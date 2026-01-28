@@ -131,7 +131,7 @@ export default function ManageTasks() {
           <article key={task.id} className="card">
             <h3>{task.title}</h3>
             <div className="meta">
-              目标 {task.targetUserId} · {new Date(task.updatedAt).toLocaleString()}
+              目标 {task.targetUserName || task.targetUserId} · {new Date(task.updatedAt).toLocaleString()}
             </div>
             <MarkdownRenderer content={task.description} />
             {task.report && (

@@ -8,6 +8,7 @@ export function listTasks(params = {}) {
       ...task,
       id: task.uuid || task.id,
       targetUserId: task.target_user_id || task.targetUserId,
+      targetUserName: task.target_user_name || task.targetUserName,
       assignedBy: task.assigned_by || task.assignedBy,
       createdAt: task.created_at || task.createdAt,
       updatedAt: task.updated_at || task.updatedAt

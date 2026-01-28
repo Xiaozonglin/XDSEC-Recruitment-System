@@ -159,10 +159,6 @@ main.container {
   margin: 0 auto;
 }
 
-.form-card.full-width {
-  width: 100%;
-  max-width: 100%;
-}
 
 
 .form-card form {
@@ -280,6 +276,16 @@ button:disabled {
   object-fit: cover;
 }
 
+.candidate-header {
+  align-items: flex-start;
+}
+
+.candidate-avatar {
+  width: 72px;
+  height: 72px;
+  align-self: flex-start;
+}
+
 .card.pinned {
   border: 2px solid #f1a50f;
 }
@@ -331,6 +337,10 @@ button:disabled {
 
 .form-footer .align-right {
   margin-left: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .footer {

@@ -276,15 +276,14 @@ button:disabled {
   object-fit: cover;
 }
 
-.candidate-header {
-  align-items: flex-start;
+.candidate-text {
+  margin-top: 0;
 }
 
-.candidate-avatar {
-  width: 72px;
-  height: 72px;
-  align-self: flex-start;
+.candidate-text h3 {
+  margin-top: 0;
 }
+
 
 .card.pinned {
   border: 2px solid #f1a50f;

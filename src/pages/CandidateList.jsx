@@ -111,14 +111,14 @@ export default function CandidateList() {
       <div className="grid two">
         {users.map((user) => (
           <article key={user.id} className="card">
-            <header className="row candidate-header">
-              <div className="row candidate-main">
+            <header className="row">
+              <div className="row">
                 <img
-                  className="avatar candidate-avatar"
+                  className="avatar"
                   src={gravatarUrl(user.email, 72)}
                   alt={user.nickname || "avatar"}
                 />
-                <div>
+                <div className="candidate-text">
                   <h3>{user.nickname || user.email}</h3>
                   <p className="meta">
                     {user.email} · {STATUS_LABELS[user.status || "r1_pending"]}

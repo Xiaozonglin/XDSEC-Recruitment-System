@@ -71,7 +71,7 @@ export default function ManageAnnouncements() {
     <section>
       <h2>公告管理</h2>
       {status && <p className="hint">{status}</p>}
-      <form className="form-card" onSubmit={onSubmit}>
+      <form className="form-card full-width" onSubmit={onSubmit}>
         <label>
           标题
           <input

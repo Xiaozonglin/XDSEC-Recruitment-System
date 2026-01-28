@@ -159,6 +159,11 @@ main.container {
   margin: 0 auto;
 }
 
+.form-card.full-width {
+  width: 100%;
+  max-width: 100%;
+}
+
 
 .form-card form {
   display: grid;
@@ -317,6 +322,15 @@ button:disabled {
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
+}
+
+.form-footer {
+  display: flex;
+  gap: 12px;
+}
+
+.form-footer .align-right {
+  margin-left: auto;
 }
 
 .footer {

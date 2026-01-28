@@ -46,8 +46,8 @@ export default function Login() {
         <button type="submit">登录</button>
       </form>
       <div className="form-footer">
-        <Link to="/forgot-password">忘记密码？</Link>
-        <Link to="/register">注册账号</Link>
+        <Link to="/forgot-password">忘记密码？去重置</Link>
+        <Link to="/register" className="align-right">注册账号</Link>
       </div>
     </section>
   );

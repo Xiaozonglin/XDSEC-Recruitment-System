@@ -73,6 +73,7 @@ export default function Register() {
             <input
               value={form.emailCode}
               onChange={(event) => setForm({ ...form, emailCode: event.target.value })}
+              autoComplete="one-time-code"
               required
             />
           </label>

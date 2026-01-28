@@ -138,9 +138,10 @@ a:hover {
 }
 
 .container {
-  max-width: 1080px;
+  width: 100%;
+  max-width: 1600px;
   margin: 32px auto 72px;
-  padding: 0 24px;
+  padding: 0 clamp(24px, 4vw, 72px);
 }
 
 main.container {
@@ -155,7 +156,9 @@ main.container {
   width: min(520px, 100%);
   max-width: 520px;
   border: 1px solid var(--border);
+  margin: 0 auto;
 }
+
 
 .form-card form {
   display: grid;
@@ -238,6 +241,10 @@ button:disabled {
   display: flex;
   gap: 12px;
   align-items: flex-end;
+}
+
+.row.form-card {
+  padding: 20px;
 }
 
 .grid {
@@ -357,6 +364,15 @@ button:disabled {
 .markdown h2,
 .markdown h3 {
   margin-top: 16px;
+}
+
+section > h1,
+section > h2 {
+  text-align: center;
+}
+
+section > p {
+  text-align: center;
 }
 
 @media (max-width: 720px) {

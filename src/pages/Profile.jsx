@@ -106,6 +106,7 @@ export default function Profile() {
             <input
               value={profile.emailCode}
               onChange={(event) => setProfile({ ...profile, emailCode: event.target.value })}
+              autoComplete="one-time-code"
               required
             />
           </label>

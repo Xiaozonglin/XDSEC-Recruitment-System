@@ -95,7 +95,7 @@ export default function CandidateList() {
     <section>
       <h2>候选人列表</h2>
       {status && <p className="hint">{status}</p>}
-      <form className="row" onSubmit={onSearch}>
+      <form className="row form-card" onSubmit={onSearch}>
         <input
           placeholder="按邮箱或昵称搜索"
           value={query}

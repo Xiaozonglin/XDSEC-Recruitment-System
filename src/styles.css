@@ -769,6 +769,10 @@ button:disabled {
   align-items: center;
 }
 
+.content-gap {
+  margin-top: var(--space-5);
+}
+
 .form-actions {
   display: flex;
   flex-wrap: wrap;

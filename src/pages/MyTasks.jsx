@@ -50,7 +50,9 @@ export default function MyTasks() {
               </div>
             </div>
             <div className="card-body">
-              <MarkdownRenderer content={task.description} />
+              <div className="content-gap">
+                <MarkdownRenderer content={task.description} />
+              </div>
               <label className="full">
                 报告（支持 Markdown）
                 <textarea

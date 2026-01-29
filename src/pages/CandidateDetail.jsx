@@ -309,7 +309,9 @@ export default function CandidateDetail() {
                     <div className="panel">
                       <h4>{task.title}</h4>
                       <p className="meta">更新时间 {formatDate(task.updatedAt || task.createdAt)}</p>
-                      <MarkdownRenderer content={task.description || ""} />
+                      <div className="content-gap">
+                        <MarkdownRenderer content={task.description || ""} />
+                      </div>
                       {task.report && (
                         <>
                           <p className="meta">任务报告</p>

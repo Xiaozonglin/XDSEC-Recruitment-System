@@ -39,7 +39,7 @@ export default function Announcements() {
               <span>{item.authorNickname || "未知"}</span>
               <span>{new Date(item.createdAt).toLocaleString()}</span>
             </div>
-            <div className="card-body">
+            <div className="card-body content-gap">
               <MarkdownRenderer content={item.content} />
             </div>
           </article>

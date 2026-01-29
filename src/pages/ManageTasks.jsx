@@ -172,7 +172,9 @@ export default function ManageTasks() {
               <span>{new Date(task.updatedAt).toLocaleString()}</span>
             </div>
             <div className="card-body">
-              <MarkdownRenderer content={task.description} />
+              <div className="content-gap">
+                <MarkdownRenderer content={task.description} />
+              </div>
               {task.report && (
                 <div className="stack-tight">
                   <h4>最新报告</h4>

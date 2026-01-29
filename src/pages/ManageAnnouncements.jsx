@@ -183,7 +183,7 @@ export default function ManageAnnouncements() {
               <span>{item.authorNickname || "未知"}</span>
               <span>{new Date(item.updatedAt).toLocaleString()}</span>
             </div>
-            <div className="card-body">
+            <div className="card-body content-gap">
               <MarkdownRenderer content={item.content} />
             </div>
             <div className="card-actions">

@@ -281,18 +281,21 @@ export default function CandidateDetail() {
               {tasks.length === 0 ? (
                 <p className="meta">暂无任务。</p>
               ) : (
-                tasks.map((task) => (
-                  <div key={task.id} className="panel">
-                    <h4>{task.title}</h4>
-                    <p className="meta">更新时间 {formatDate(task.updatedAt || task.createdAt)}</p>
-                    <MarkdownRenderer content={task.description || ""} />
-                    {task.report && (
-                      <>
-                        <p className="meta">任务报告</p>
-                        <MarkdownRenderer content={task.report} />
-                      </>
-                    )}
-                  </div>
+                tasks.map((task, index) => (
+                  <React.Fragment key={task.id}>
+                    {index > 0 && <div className="divider" />}
+                    <div className="panel">
+                      <h4>{task.title}</h4>
+                      <p className="meta">更新时间 {formatDate(task.updatedAt || task.createdAt)}</p>
+                      <MarkdownRenderer content={task.description || ""} />
+                      {task.report && (
+                        <>
+                          <p className="meta">任务报告</p>
+                          <MarkdownRenderer content={task.report} />
+                        </>
+                      )}
+                    </div>
+                  </React.Fragment>
                 ))
               )}
             </>

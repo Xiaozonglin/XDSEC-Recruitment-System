@@ -373,6 +373,11 @@ select {
   width: 100%;
 }
 
+.readonly-field {
+  background: color-mix(in srgb, var(--page-bg-soft) 65%, var(--page-surface));
+  color: var(--text-muted);
+}
+
 textarea {
   resize: vertical;
   max-width: 100%;

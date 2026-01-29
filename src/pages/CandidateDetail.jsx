@@ -42,6 +42,17 @@ export default function CandidateDetail() {
   const [showApplication, setShowApplication] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
+  const onCardExpand = (event, isOpen, setter) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (target.closest("button, a, input, textarea, select, label")) {
+      return;
+    }
+    if (!isOpen) {
+      setter(true);
+    }
+  };
+
   const displayDirections = useMemo(() => {
     if (!user) return [];
     return user.application?.directions || user.directions || [];
@@ -193,7 +204,7 @@ export default function CandidateDetail() {
       {status && <p className="hint">{status}</p>}
 
       <div className="grid single">
-        <article className="card">
+        <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
           <div>
             <h3 style={{ textAlign: "left" }}>{user.nickname || user.email}</h3>
             <div className="row">
@@ -227,7 +238,7 @@ export default function CandidateDetail() {
           </div>
         </article>
 
-        <article className="card">
+        <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
           <h3>设置通过方向</h3>
           {user.passedDirectionsBy && user.passedDirectionsBy.length > 0 && (
             <p className="meta">更新人：{user.passedDirectionsBy.join(", ")}</p>
@@ -257,10 +268,10 @@ export default function CandidateDetail() {
           </div>
         </article>
 
-        <article className="card">
-          <div className="row" style={{ justifyContent: "space-between" }}>
+        <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
             <h3>任务完成信息</h3>
-            <button type="button" className="link-button" onClick={() => setShowTasks((prev) => !prev)}>
+            <button type="button" onClick={() => setShowTasks((prev) => !prev)}>
               {showTasks ? "收起" : "展开"}
             </button>
           </div>
@@ -289,12 +300,11 @@ export default function CandidateDetail() {
         </article>
 
         {user.application && (
-          <article className="card">
-            <div className="row" style={{ justifyContent: "space-between" }}>
+          <article className="card" onClick={(event) => onCardExpand(event, showApplication, setShowApplication)}>
+            <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
               <h3>简历与报名信息</h3>
               <button
                 type="button"
-                className="link-button"
                 onClick={() => setShowApplication((prev) => !prev)}
               >
                 {showApplication ? "收起" : "展开"}
@@ -309,16 +319,17 @@ export default function CandidateDetail() {
                 <p><strong>专业：</strong> {user.application.major}</p>
                 <p><strong>学号：</strong> {user.application.studentId}</p>
                 <p><strong>方向：</strong> {(user.application.directions || []).join(", ")}</p>
+                <div className="divider" />
                 <MarkdownRenderer content={user.application.resume || ""} />
               </>
             )}
           </article>
         )}
 
-        <article className="card">
-          <div className="row" style={{ justifyContent: "space-between" }}>
+        <article className="card" onClick={(event) => onCardExpand(event, showComments, setShowComments)}>
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
             <h3>评论</h3>
-            <button type="button" className="link-button" onClick={() => setShowComments((prev) => !prev)}>
+            <button type="button" onClick={() => setShowComments((prev) => !prev)}>
               {showComments ? "收起" : "展开"}
             </button>
           </div>

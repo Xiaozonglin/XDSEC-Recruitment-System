@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { listTasks, createTask, updateTask, deleteTask } from "../api/tasks.js";
-import { listUsers } from "../api/users.js";
+import { listUsers, getUser } from "../api/users.js";
 import MarkdownRenderer from "../components/MarkdownRenderer.jsx";
 
 export default function ManageTasks() {
@@ -11,6 +11,7 @@ export default function ManageTasks() {
   const [status, setStatus] = useState("");
   const [userQuery, setUserQuery] = useState("");
   const [userOptions, setUserOptions] = useState([]);
+  const [selectedUserName, setSelectedUserName] = useState("");
   const [editingId, setEditingId] = useState("");
 
   const load = () => {
@@ -28,6 +29,10 @@ export default function ManageTasks() {
     const targetUserId = params.get("targetUserId");
     if (targetUserId) {
       setForm((prev) => ({ ...prev, targetUserId }));
+      setSelectedUserName("");
+      getUser(targetUserId)
+        .then((user) => setSelectedUserName(user.nickname || user.email || user.id))
+        .catch(() => {});
     }
   }, [location.search]);
 
@@ -43,6 +48,10 @@ export default function ManageTasks() {
   const onSubmit = async (event) => {
     event.preventDefault();
     setStatus("");
+    if (!form.targetUserId) {
+      setStatus("请选择目标用户。");
+      return;
+    }
     try {
       if (editingId) {
         await updateTask(editingId, form);
@@ -50,6 +59,7 @@ export default function ManageTasks() {
         await createTask(form);
       }
       setForm({ title: "", description: "", targetUserId: "" });
+      setSelectedUserName("");
       setEditingId("");
       load();
     } catch (error) {
@@ -63,6 +73,7 @@ export default function ManageTasks() {
       description: task.description || "",
       targetUserId: task.targetUserId || ""
     });
+    setSelectedUserName(task.targetUserName || task.targetUserId || "");
     setEditingId(task.id);
     setStatus("正在编辑任务，发布后将覆盖原内容。");
   };
@@ -108,21 +119,23 @@ export default function ManageTasks() {
                 className="search-option"
                 onClick={() => {
                   setForm({ ...form, targetUserId: user.id });
+                  setSelectedUserName(user.nickname || user.email || user.id);
                   setUserQuery("");
                   setUserOptions([]);
                 }}
               >
-                {user.nickname || user.email} · {user.id}
+                {(user.nickname || "未填写昵称") + " · " + (user.email || "未填写邮箱")}
               </button>
             ))}
           </div>
         )}
         <label>
-          目标用户 ID
+          目标用户
           <input
-            value={form.targetUserId}
-            onChange={(event) => setForm({ ...form, targetUserId: event.target.value })}
-            required
+            value={selectedUserName}
+            placeholder="请通过搜索选择用户"
+            readOnly
+            className="readonly-field"
           />
         </label>
         <label>

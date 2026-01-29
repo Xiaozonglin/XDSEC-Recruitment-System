@@ -93,11 +93,20 @@ export default function ManageAnnouncements() {
   };
 
   return (
-    <section>
-      <h2>公告管理</h2>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">公告管理</h1>
+          <p className="page-subtitle">发布与维护面试公告，支持 Markdown 排版。</p>
+        </div>
+      </div>
       {status && <p className="hint">{status}</p>}
-      <form className="form-card" onSubmit={onSubmit} style={{ marginBottom: "16px" }}>
-        <label>
+      <form className="form-card wide stack gap-bottom-lg" onSubmit={onSubmit}>
+        <div className="stack-tight">
+          <h3>{editingId ? "编辑公告" : "发布新公告"}</h3>
+          <p className="page-subtitle">填写标题、内容与可见范围。</p>
+        </div>
+        <label className="field-top-gap">
           标题
           <input
             value={form.title}
@@ -157,7 +166,7 @@ export default function ManageAnnouncements() {
             </div>
           </fieldset>
         )}
-        <div style={{ marginTop: "12px" }}>
+        <div className="form-actions">
           <button type="submit">{editingId ? "发布修改" : "发布"}</button>
         </div>
       </form>
@@ -165,12 +174,19 @@ export default function ManageAnnouncements() {
       <div className="grid single">
         {items.map((item) => (
           <article key={item.id} className={`card ${item.pinned ? "pinned" : ""}`}>
-            <h3>{item.title}</h3>
-            <div className="meta">
-              {visibilityLabel(item)} · 发布人 {item.authorNickname || "未知"} · {new Date(item.updatedAt).toLocaleString()}
+            <div className="card-header">
+              <h3>{item.title}</h3>
+              {item.pinned && <span className="pill">置顶</span>}
             </div>
-            <MarkdownRenderer content={item.content} />
-            <div className="row">
+            <div className="inline-meta">
+              <span>{visibilityLabel(item)}</span>
+              <span>{item.authorNickname || "未知"}</span>
+              <span>{new Date(item.updatedAt).toLocaleString()}</span>
+            </div>
+            <div className="card-body">
+              <MarkdownRenderer content={item.content} />
+            </div>
+            <div className="card-actions">
               <button type="button" onClick={() => onPin(item.id, !item.pinned)}>
                 {item.pinned ? "取消置顶" : "置顶"}
               </button>

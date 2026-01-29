@@ -189,87 +189,109 @@ export default function CandidateDetail() {
 
   if (!user) {
     return (
-      <section>
+      <section className="page">
+        <div className="page-header">
+          <div className="stack-tight">
+            <h2 className="page-title">候选人详情</h2>
+            <p className="page-subtitle">正在加载候选人资料与进度。</p>
+          </div>
+          <div className="page-actions">
+            <Link to="/interviewer/candidates" className="link-button">返回候选人列表</Link>
+          </div>
+        </div>
         <p className="hint">正在加载候选人详情...</p>
-        <Link to="/interviewer/candidates">返回候选人列表</Link>
       </section>
     );
   }
 
   return (
-    <section>
-      <div className="row" style={{ justifyContent: "space-between" }}>
-        <h2>候选人详情</h2>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h2 className="page-title">候选人详情</h2>
+          <p className="page-subtitle">管理面试状态、通过方向与任务进度。</p>
+        </div>
+        <div className="page-actions">
+          <Link to="/interviewer/candidates" className="link-button">返回候选人列表</Link>
+        </div>
       </div>
       {status && <p className="hint">{status}</p>}
 
       <div className="grid single">
         <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
-          <div>
-            <h3 style={{ textAlign: "left" }}>{user.nickname || user.email}</h3>
+          <div className="card-header">
             <div className="row">
               <img
                 className="avatar"
                 src={gravatarUrl(user.email, 72)}
                 alt={user.nickname || "avatar"}
               />
-              <div>
-                <p className="meta">{user.email}</p>
-                <p className="meta">{user.signature || "暂无个性签名"}</p>
+              <div className="stack-tight">
+                <h3>{user.nickname || user.email}</h3>
+                <div className="inline-meta">
+                  <span>{user.email}</span>
+                  <span>{user.signature || "暂无个性签名"}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>
-          <p>方向：{displayDirections.join(", ") || "暂无"}</p>
-          <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
-          <div className="row">
-            <select
-              value={user.status || "r1_pending"}
-              onChange={(event) => updateStatus(event.target.value)}
-            >
-              {STATUSES.map((item) => (
-                <option key={item} value={item}>{STATUS_LABELS[item]}</option>
-              ))}
-            </select>
+            <div className="card-actions">
+              <select
+                value={user.status || "r1_pending"}
+                onChange={(event) => updateStatus(event.target.value)}
+              >
+                {STATUSES.map((item) => (
+                  <option key={item} value={item}>{STATUS_LABELS[item]}</option>
+                ))}
+              </select>
               {user.role === "interviewee" && (
-              <button type="button" className="nowrap" onClick={promote}>设为面试官</button>
-            )}
-            <button type="button" className="nowrap" onClick={removeUser}>删除用户</button>
+                <button type="button" className="nowrap" onClick={promote}>设为面试官</button>
+              )}
+              <button type="button" className="nowrap" onClick={removeUser}>删除用户</button>
+            </div>
+          </div>
+          <div className="card-body">
+            <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>
+            <p>方向：{displayDirections.join(", ") || "暂无"}</p>
+            <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
           </div>
         </article>
 
         <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
-          <h3>设置通过方向</h3>
+          <div className="card-header">
+            <h3>设置通过方向</h3>
+          </div>
           {user.passedDirectionsBy && user.passedDirectionsBy.length > 0 && (
             <p className="meta">更新人：{user.passedDirectionsBy.join(", ")}</p>
           )}
-          <div className="tags">
-            {DIRECTIONS.map((direction) => (
-              <label key={direction} className="tag">
-                <input
-                  type="checkbox"
-                  checked={passedInputs.includes(direction)}
-                  onChange={() =>
-                    setPassedInputs((prev) => {
-                      const current = prev || [];
-                      const next = current.includes(direction)
-                        ? current.filter((item) => item !== direction)
-                        : [...current, direction];
-                      return next;
-                    })
-                  }
-                />
-                {direction}
-              </label>
-            ))}
-          </div>
-          <div style={{ marginTop: "12px" }}>
-            <button type="button" onClick={updatePassed}>提交通过方向</button>
+          <div className="card-body">
+            <div className="tags">
+              {DIRECTIONS.map((direction) => (
+                <label key={direction} className="tag">
+                  <input
+                    type="checkbox"
+                    checked={passedInputs.includes(direction)}
+                    onChange={() =>
+                      setPassedInputs((prev) => {
+                        const current = prev || [];
+                        const next = current.includes(direction)
+                          ? current.filter((item) => item !== direction)
+                          : [...current, direction];
+                        return next;
+                      })
+                    }
+                  />
+                  {direction}
+                </label>
+              ))}
+            </div>
+            <div className="form-actions">
+              <button type="button" onClick={updatePassed}>提交通过方向</button>
+            </div>
           </div>
         </article>
 
         <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
-          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+          <div className="card-header">
             <h3>任务完成信息</h3>
             <button type="button" onClick={() => setShowTasks((prev) => !prev)}>
               {showTasks ? "收起" : "展开"}
@@ -304,7 +326,7 @@ export default function CandidateDetail() {
 
         {user.application && (
           <article className="card" onClick={(event) => onCardExpand(event, showApplication, setShowApplication)}>
-            <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+            <div className="card-header">
               <h3>简历与报名信息</h3>
               <button
                 type="button"
@@ -314,7 +336,7 @@ export default function CandidateDetail() {
               </button>
             </div>
             {showApplication && (
-              <>
+              <div className="card-body">
                 <p><strong>姓名：</strong> {user.application.realName}</p>
                 <p><strong>手机号：</strong> {user.application.phone}</p>
                 <p><strong>性别：</strong> {user.application.gender === "male" ? "男" : "女"}</p>
@@ -324,13 +346,13 @@ export default function CandidateDetail() {
                 <p><strong>方向：</strong> {(user.application.directions || []).join(", ")}</p>
                 <div className="divider" />
                 <MarkdownRenderer content={user.application.resume || ""} />
-              </>
+              </div>
             )}
           </article>
         )}
 
         <article className="card" onClick={(event) => onCardExpand(event, showComments, setShowComments)}>
-          <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+          <div className="card-header">
             <h3>评论</h3>
             <button type="button" onClick={() => setShowComments((prev) => !prev)}>
               {showComments ? "收起" : "展开"}
@@ -369,7 +391,7 @@ export default function CandidateDetail() {
                             {comment.interviewerName || "面试官"} · {formatDate(comment.updatedAt || comment.createdAt)}
                           </p>
                           {canManageComment(comment) && (
-                            <div className="row">
+                            <div className="card-actions">
                               <button type="button" onClick={() => onEditComment(comment)}>编辑</button>
                               <button type="button" onClick={() => onDeleteComment(comment.id)}>删除</button>
                             </div>
@@ -384,14 +406,17 @@ export default function CandidateDetail() {
                 <p className="meta">暂无评论</p>
               )}
             <div className="divider" />
-            <textarea
-              rows={3}
-              placeholder="写下评价或备注"
-              value={commentInput}
-              onChange={(event) => setCommentInput(event.target.value)}
-              style={{ marginTop: "12px", marginBottom: "12px" }}
-            />
-            <button type="button" onClick={submitComment}>提交评论</button>
+            <div className="stack">
+              <textarea
+                rows={3}
+                placeholder="写下评价或备注"
+                value={commentInput}
+                onChange={(event) => setCommentInput(event.target.value)}
+              />
+              <div className="form-actions">
+                <button type="button" onClick={submitComment}>提交评论</button>
+              </div>
+            </div>
           </>
         )}
       </article>

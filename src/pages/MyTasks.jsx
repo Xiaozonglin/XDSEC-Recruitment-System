@@ -29,38 +29,53 @@ export default function MyTasks() {
   };
 
   return (
-    <section>
-      <h1>我的任务</h1>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">我的任务</h1>
+          <p className="page-subtitle">查看任务说明并提交最新报告。</p>
+        </div>
+      </div>
       {status && <p className="hint">{status}</p>}
       <div className="grid single">
         {tasks.map((task) => (
           <article key={task.id} className="card">
-            <h2>{task.title}</h2>
-            <div className="meta">分配人 {task.assignedBy} · {new Date(task.createdAt).toLocaleString()}</div>
-            <MarkdownRenderer content={task.description} />
-            <label className="full">
-              报告（支持 Markdown）
-              <textarea
-                rows={5}
-                value={report[task.id] || task.report || ""}
-                onChange={(event) =>
-                  setReport((prev) => ({ ...prev, [task.id]: event.target.value }))
-                }
-              />
-            </label>
-            <div style={{ marginTop: "12px" }}>
-              <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
+            <div className="card-header">
+              <div className="stack-tight">
+                <h2>{task.title}</h2>
+                <div className="inline-meta">
+                  <span>分配人 {task.assignedBy}</span>
+                  <span>{new Date(task.createdAt).toLocaleString()}</span>
+                </div>
+              </div>
             </div>
-            {task.report && (
-              <>
-                <h3>最新提交</h3>
-                <MarkdownRenderer content={task.report} />
-              </>
-            )}
+            <div className="card-body">
+              <MarkdownRenderer content={task.description} />
+              <label className="full">
+                报告（支持 Markdown）
+                <textarea
+                  rows={5}
+                  value={report[task.id] || task.report || ""}
+                  onChange={(event) =>
+                    setReport((prev) => ({ ...prev, [task.id]: event.target.value }))
+                  }
+                />
+              </label>
+              <div className="form-actions">
+                <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
+              </div>
+              {task.report && (
+                <div className="stack-tight">
+                  <div className="divider" />
+                  <h3>最新提交</h3>
+                  <MarkdownRenderer content={task.report} />
+                </div>
+              )}
+            </div>
           </article>
         ))}
       </div>
-      {!tasks.length && <p>暂无任务。</p>}
+      {!tasks.length && <p className="meta">暂无任务。</p>}
     </section>
   );
 }

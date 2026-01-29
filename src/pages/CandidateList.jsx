@@ -16,6 +16,11 @@ export default function CandidateList() {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState("");
+  const apiBase = import.meta.env.VITE_API_BASE_URL || "/api/v2";
+  const host = typeof window !== "undefined" ? window.location.hostname : "localhost";
+  const exportUrl = apiBase.startsWith("http")
+    ? `${apiBase}/export/applications`
+    : `http://${host}:8080${apiBase}/export/applications`;
 
   const load = () => {
     listUsers({ q: query, role: "interviewee" })
@@ -38,38 +43,52 @@ export default function CandidateList() {
   };
 
   return (
-    <section>
-      <h2>候选人列表</h2>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">候选人列表</h1>
+          <p className="page-subtitle">搜索、查看候选人状态与方向进度。</p>
+        </div>
+        <div className="page-actions">
+          <a href={exportUrl} className="link-button export-link" target="_blank" rel="noreferrer">
+            导出候选人表格
+          </a>
+        </div>
+      </div>
       {status && <p className="hint">{status}</p>}
-      <form className="row form-card" onSubmit={onSearch} style={{ marginBottom: "16px" }}>
-        <input
-          placeholder="按邮箱或昵称搜索"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
+      <form className="form-card wide form-inline" onSubmit={onSearch}>
+        <label>
+          <input
+            placeholder="按邮箱或昵称搜索"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
         <button type="submit" className="nowrap">搜索</button>
       </form>
-      <div className="grid single">
+      <div className="grid two">
         {users.map((user) => (
           <article key={user.id} className="card">
-            <div>
-              <h3 style={{ textAlign: "left" }}>{user.nickname || user.email}</h3>
-              <div className="row">
+            <div className="stack-tight">
+              <h3 className="card-title">{user.nickname || user.email}</h3>
+              <div className="row card-identity">
                 <img
                   className="avatar"
                   src={gravatarUrl(user.email, 72)}
                   alt={user.nickname || "avatar"}
                 />
-                <div>
-                  <p className="meta">{user.email}</p>
-                  <p className="meta">{user.signature || "暂无个性签名"}</p>
+                <div className="inline-meta stack-tight">
+                  <span>{user.signature || "暂无个性签名"}</span>
+                  <span>{user.email}</span>
                 </div>
               </div>
             </div>
-            <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>
-            <p>方向：{(user.application?.directions || user.directions || []).join(", ") || "暂无"}</p>
-            <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
-            <Link to={`${user.id}`}>查看详情</Link>
+            <div className="card-body">
+              <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>
+              <p>方向：{(user.application?.directions || user.directions || []).join(", ") || "暂无"}</p>
+              <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
+              <Link to={`${user.id}`} className="action-link">查看详情</Link>
+            </div>
           </article>
         ))}
       </div>

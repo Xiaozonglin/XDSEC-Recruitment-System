@@ -55,9 +55,13 @@ export default function Register() {
 
   return (
     <section className="form-card">
-      <h1>注册</h1>
+      <div className="stack-tight">
+        <h1>注册</h1>
+        <p className="page-subtitle">创建账号后即可填写申请与查看任务。</p>
+        <div className="divider" />
+      </div>
       {status.message && <p className="hint">{status.message}</p>}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="stack">
         <label>
           邮箱
           <input
@@ -67,7 +71,7 @@ export default function Register() {
             required
           />
         </label>
-        <div className="row">
+        <div className="row code-row">
           <label>
             邮箱验证码
             <input
@@ -110,9 +114,11 @@ export default function Register() {
             required
           />
         </label>
-        <button type="submit" disabled={submitting}>注册</button>
+        <div className="form-actions">
+          <button type="submit" disabled={submitting}>注册</button>
+        </div>
       </form>
-      <div className="form-footer">
+      <div className="form-footer gap-top-md">
         <Link to="/login">已有账号？去登录</Link>
       </div>
     </section>

@@ -26,44 +26,48 @@ export default function UserDirectory() {
   }, [role]);
 
   return (
-    <section>
-      <h1>成员目录</h1>
-      {status && <p className="hint">{status}</p>}
-      <div className="row" style={{ marginBottom: "12px" }}>
-        <label>
-          角色
-          <select value={role} onChange={(event) => setRole(event.target.value)}>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">成员目录</h1>
+          <p className="page-subtitle">查看面试官与面试者的信息与方向分布。</p>
+        </div>
+        <div className="page-actions">
+          <select className="select-clean" value={role} onChange={(event) => setRole(event.target.value)}>
             <option value="interviewee">面试者</option>
             <option value="interviewer">面试官</option>
           </select>
-        </label>
+        </div>
       </div>
+      {status && <p className="hint">{status}</p>}
       <div className="grid two">
         {items.map((user) => (
           <article key={user.id} className="card">
-            <div>
-              <h3 style={{ textAlign: "left" }}>{user.nickname || "匿名用户"}</h3>
-              <div className="row">
+            <div className="stack-tight">
+              <h3 className="card-title">{user.nickname || "匿名用户"}</h3>
+              <div className="row card-identity">
                 <img
                   className="avatar"
                   src={gravatarUrl(user.email, 72)}
                   alt={user.nickname || "avatar"}
                 />
-                <div>
-                  <p className="meta">{user.email}</p>
-                  <p className="meta">{user.signature || "暂无个性签名"}</p>
+                <div className="inline-meta stack-tight">
+                  <span>{user.signature || "暂无个性签名"}</span>
+                  <span>{user.email}</span>
                 </div>
               </div>
             </div>
-            {user.directions && (
-              <p>方向：{(user.directions || []).join(", ")}</p>
-            )}
-            {user.role === "interviewee" && user.passedDirections && (
-              <p>通过方向：{(user.passedDirections || []).join(", ")}</p>
-            )}
-            {user.role === "interviewee" && user.status && (
-              <p>状态：{statusLabels[user.status] || user.status}</p>
-            )}
+            <div className="card-body">
+              {user.directions && (
+                <p>方向：{(user.directions || []).join(", ")}</p>
+              )}
+              {user.role === "interviewee" && user.passedDirections && (
+                <p>通过方向：{(user.passedDirections || []).join(", ")}</p>
+              )}
+              {user.role === "interviewee" && user.status && (
+                <p>状态：{statusLabels[user.status] || user.status}</p>
+              )}
+            </div>
           </article>
         ))}
       </div>

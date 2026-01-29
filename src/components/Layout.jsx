@@ -38,19 +38,28 @@ export default function Layout({ children }) {
           <Link to="/announcements">公告</Link>
           {user && <Link to="/profile">个人资料</Link>}
           {user && <Link to="/directory">成员目录</Link>}
+          {user?.role === "interviewer" && (
+            <div className="nav-link-group">
+              <Link to="/interviewer/announcements">公告管理</Link>
+              <Link to="/interviewer/tasks">任务管理</Link>
+              <Link to="/interviewer/candidates">候选人列表</Link>
+            </div>
+          )}
           {user?.role === "interviewee" && <Link to="/application">填写申请</Link>}
           {user?.role === "interviewee" && <Link to="/tasks">我的任务</Link>}
-          {user?.role === "interviewer" && <Link to="/interviewer">面试官控制台</Link>}
         </div>
         <div className="nav-right">
+          {/* Theme accent switcher is hidden. Uncomment the block below to enable it. */}
+          {/*
           <label className="theme-select">
             <select value={accent} onChange={(event) => setAccent(event.target.value)}>
-              <option value="default">浅薰衣草</option>
-              <option value="mist">海盐烟蓝</option>
-              <option value="sage">浅鼠尾草</option>
-              <option value="peach">柔光杏橙</option>
+              <option value="default">暖灰色</option>
+              <option value="mist">雾海蓝</option>
+              <option value="sage">岩苔绿</option>
+              <option value="peach">暖杏砂</option>
             </select>
           </label>
+          */}
           <label className="theme-select">
             <select value={theme} onChange={(event) => setTheme(event.target.value)}>
               <option value="system">跟随系统</option>

@@ -21,9 +21,13 @@ export default function Login() {
 
   return (
     <section className="form-card">
-      <h1>登录</h1>
+      <div className="stack-tight">
+        <h1>登录</h1>
+        <p className="page-subtitle">欢迎回来，继续你的面试流程。</p>
+        <div className="divider" />
+      </div>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="stack">
         <label>
           账号（邮箱或昵称）
           <input
@@ -43,9 +47,11 @@ export default function Login() {
             required
           />
         </label>
-        <button type="submit">登录</button>
+        <div className="form-actions">
+          <button type="submit">登录</button>
+        </div>
       </form>
-      <div className="form-footer">
+      <div className="form-footer gap-top-md">
         <Link to="/forgot-password">忘记密码？去重置</Link>
         <Link to="/register" className="align-right">注册账号</Link>
       </div>

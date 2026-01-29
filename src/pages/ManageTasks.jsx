@@ -89,11 +89,20 @@ export default function ManageTasks() {
   };
 
   return (
-    <section>
-      <h2>任务管理</h2>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">任务管理</h1>
+          <p className="page-subtitle">为面试者布置任务并追踪提交情况。</p>
+        </div>
+      </div>
       {status && <p className="hint">{status}</p>}
-      <form className="form-card" onSubmit={onSubmit} style={{ marginBottom: "16px" }}>
-        <label>
+      <form className="form-card wide stack gap-bottom-lg" onSubmit={onSubmit}>
+        <div className="stack-tight">
+          <h3>{editingId ? "编辑任务" : "布置新任务"}</h3>
+          <p className="page-subtitle">先搜索用户，再填写任务内容。</p>
+        </div>
+        <label className="field-top-gap">
           标题
           <input
             value={form.title}
@@ -130,7 +139,7 @@ export default function ManageTasks() {
           </div>
         )}
         <label>
-          目标用户
+          目标用户（通过搜索选择）
           <input
             value={selectedUserName}
             placeholder="请通过搜索选择用户"
@@ -147,24 +156,31 @@ export default function ManageTasks() {
             required
           />
         </label>
-        <button type="submit">{editingId ? "发布修改" : "布置任务"}</button>
+        <div className="form-actions">
+          <button type="submit">{editingId ? "发布修改" : "布置任务"}</button>
+        </div>
       </form>
 
-        <div className="grid single">
+      <div className="grid single">
         {items.map((task) => (
           <article key={task.id} className="card">
-            <h3>{task.title}</h3>
-            <div className="meta">
-              目标 {task.targetUserName || task.targetUserId} · {new Date(task.updatedAt).toLocaleString()}
+            <div className="card-header">
+              <h3>{task.title}</h3>
             </div>
-            <MarkdownRenderer content={task.description} />
-            {task.report && (
-              <>
-                <h4>最新报告</h4>
-                <MarkdownRenderer content={task.report} />
-              </>
-            )}
-            <div className="row">
+            <div className="inline-meta">
+              <span>目标 {task.targetUserName || task.targetUserId}</span>
+              <span>{new Date(task.updatedAt).toLocaleString()}</span>
+            </div>
+            <div className="card-body">
+              <MarkdownRenderer content={task.description} />
+              {task.report && (
+                <div className="stack-tight">
+                  <h4>最新报告</h4>
+                  <MarkdownRenderer content={task.report} />
+                </div>
+              )}
+            </div>
+            <div className="card-actions">
               <button type="button" onClick={() => onEdit(task)}>编辑</button>
               <button type="button" onClick={() => onDelete(task.id)}>删除</button>
             </div>

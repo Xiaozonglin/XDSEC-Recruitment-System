@@ -45,9 +45,13 @@ export default function ForgotPassword() {
 
   return (
     <section className="form-card">
-      <h1>重置密码</h1>
+      <div className="stack-tight">
+        <h1>重置密码</h1>
+        <p className="page-subtitle">通过邮箱验证码重置账号密码。</p>
+        <div className="divider" />
+      </div>
       {status.message && <p className="hint">{status.message}</p>}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} className="stack">
         <label>
           邮箱
           <input
@@ -57,7 +61,7 @@ export default function ForgotPassword() {
             required
           />
         </label>
-        <div className="row">
+        <div className="row code-row">
           <label>
             邮箱验证码
             <input
@@ -84,9 +88,11 @@ export default function ForgotPassword() {
             required
           />
         </label>
-        <button type="submit" disabled={submitting}>更新密码</button>
+        <div className="form-actions">
+          <button type="submit" disabled={submitting}>更新密码</button>
+        </div>
       </form>
-      <div className="form-footer">
+      <div className="form-footer gap-top-md">
         <Link to="/login">返回登录</Link>
       </div>
     </section>

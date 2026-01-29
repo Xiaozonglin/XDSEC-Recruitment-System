@@ -23,6 +23,7 @@ export default function Profile() {
   const [sending, setSending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [originalEmail, setOriginalEmail] = useState("");
+  const [section, setSection] = useState("profile");
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -107,182 +108,231 @@ export default function Profile() {
   };
 
   return (
-    <section className="form-card">
-      <h1>个人资料</h1>
-      {status && <p className="hint">{status}</p>}
-      <form onSubmit={onSaveProfile}>
-        {user?.role === "interviewee" && (
-          <>
-            <fieldset>
-              <legend>通过方向</legend>
-              <div className="tags">
-                {DIRECTIONS.map((direction) => (
-                  <label key={direction} className="tag">
-                    <input
-                      type="checkbox"
-                      checked={(user.passedDirections || []).includes(direction)}
-                      readOnly
-                      disabled
-                    />
-                    {direction}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-            <div className="divider" />
-          </>
-        )}
-        <label>
-          邮箱
-          <input
-            type="email"
-            value={profile.email}
-            onChange={(event) => setProfile({ ...profile, email: event.target.value })}
-            required
-          />
-        </label>
-        {profile.email !== originalEmail && (
-          <>
-            <div className="row">
-              <label>
-                新邮箱验证码
-                <input
-                  value={emailCode}
-                  onChange={(event) => setEmailCode(event.target.value)}
-                  autoComplete="one-time-code"
-                  required
-                />
-              </label>
-              <button
-                type="button"
-                onClick={sendCode}
-                disabled={!profile.email || sending || cooldown > 0}
-              >
-                {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
-              </button>
-            </div>
-            <label>
-              当前密码
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(event) => setCurrentPassword(event.target.value)}
-                required
-              />
-            </label>
-          </>
-        )}
-        <label>
-          昵称
-          <input
-            value={profile.nickname}
-            onChange={(event) => setProfile({ ...profile, nickname: event.target.value })}
-            required
-          />
-        </label>
-        <label>
-          个性签名
-          <input
-            value={profile.signature}
-            onChange={(event) => setProfile({ ...profile, signature: event.target.value })}
-          />
-        </label>
-        {user?.role === "interviewer" && (
-          <fieldset>
-            <legend>方向</legend>
-            <div className="tags">
-              {DIRECTIONS.map((direction) => (
-                <label key={direction} className="tag">
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">个人资料</h1>
+          <p className="page-subtitle">更新邮箱、昵称、方向偏好与账号安全设置。</p>
+        </div>
+      </div>
+      <div className="card profile-shell">
+        {status && <p className="hint">{status}</p>}
+        <div className="profile-layout">
+          <aside className="profile-nav">
+            <button
+              type="button"
+              className={section === "profile" ? "is-active" : ""}
+              onClick={() => setSection("profile")}
+            >
+              基础资料
+            </button>
+            <button
+              type="button"
+              className={section === "password" ? "is-active" : ""}
+              onClick={() => setSection("password")}
+            >
+              修改密码
+            </button>
+            <button
+              type="button"
+              className={section === "danger" ? "is-active" : ""}
+              onClick={() => setSection("danger")}
+            >
+              注销账号
+            </button>
+          </aside>
+          <div className="profile-panel">
+            {section === "profile" && (
+              <form onSubmit={onSaveProfile} className="stack">
+                <div className="stack-tight">
+                  <h2>基础资料</h2>
+                  <p className="page-subtitle">邮箱变更需要验证码与当前密码确认。</p>
+                </div>
+                {user?.role === "interviewee" && (
+                  <>
+                    <fieldset>
+                      <legend>通过方向</legend>
+                      <div className="tags">
+                        {DIRECTIONS.map((direction) => (
+                          <label key={direction} className="tag">
+                            <input
+                              type="checkbox"
+                              checked={(user.passedDirections || []).includes(direction)}
+                              readOnly
+                              disabled
+                            />
+                            {direction}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <div className="divider" />
+                  </>
+                )}
+                <label className="field-top-gap">
+                  邮箱
                   <input
-                    type="checkbox"
-                    checked={(profile.directions || []).includes(direction)}
-                    onChange={() =>
-                      setProfile((prev) => {
-                        const current = prev.directions || [];
-                        const next = current.includes(direction)
-                          ? current.filter((item) => item !== direction)
-                          : [...current, direction];
-                        return { ...prev, directions: next };
-                      })
-                    }
+                    type="email"
+                    value={profile.email}
+                    onChange={(event) => setProfile({ ...profile, email: event.target.value })}
+                    required
                   />
-                  {direction}
                 </label>
-              ))}
-            </div>
-          </fieldset>
-        )}
-        <button type="submit">保存资料</button>
-      </form>
+                {profile.email !== originalEmail && (
+                  <>
+                    <div className="row code-row">
+                      <label>
+                        新邮箱验证码
+                        <input
+                          value={emailCode}
+                          onChange={(event) => setEmailCode(event.target.value)}
+                          autoComplete="one-time-code"
+                          required
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={sendCode}
+                        disabled={!profile.email || sending || cooldown > 0}
+                      >
+                        {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+                      </button>
+                    </div>
+                    <label>
+                      当前密码
+                      <input
+                        type="password"
+                        value={currentPassword}
+                        onChange={(event) => setCurrentPassword(event.target.value)}
+                        required
+                      />
+                    </label>
+                  </>
+                )}
+                <label>
+                  昵称
+                  <input
+                    value={profile.nickname}
+                    onChange={(event) => setProfile({ ...profile, nickname: event.target.value })}
+                    required
+                  />
+                </label>
+                <label>
+                  个性签名
+                  <input
+                    value={profile.signature}
+                    onChange={(event) => setProfile({ ...profile, signature: event.target.value })}
+                  />
+                </label>
+                {user?.role === "interviewer" && (
+                  <fieldset>
+                    <legend>方向</legend>
+                    <div className="tags">
+                      {DIRECTIONS.map((direction) => (
+                        <label key={direction} className="tag">
+                          <input
+                            type="checkbox"
+                            checked={(profile.directions || []).includes(direction)}
+                            onChange={() =>
+                              setProfile((prev) => {
+                                const current = prev.directions || [];
+                                const next = current.includes(direction)
+                                  ? current.filter((item) => item !== direction)
+                                  : [...current, direction];
+                                return { ...prev, directions: next };
+                              })
+                            }
+                          />
+                          {direction}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                )}
+                <div className="form-actions">
+                  <button type="submit">保存资料</button>
+                </div>
+              </form>
+            )}
 
-      <div className="divider" />
+            {section === "password" && (
+              <form onSubmit={onChangePassword} className="stack">
+                <div className="stack-tight">
+                  <h2>修改密码</h2>
+                  <p className="page-subtitle">建议定期更新密码以保障账号安全。</p>
+                </div>
+                <div className="row code-row field-top-gap">
+                  <label>
+                    邮箱验证码
+                    <input
+                      value={securityCode}
+                      onChange={(event) => setSecurityCode(event.target.value)}
+                      autoComplete="one-time-code"
+                      required
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={sendCode}
+                    disabled={!profile.email || sending || cooldown > 0}
+                  >
+                    {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+                  </button>
+                </div>
+                <label>
+                  旧密码
+                  <input
+                    type="password"
+                    value={passwordForm.oldPassword}
+                    onChange={(event) => setPasswordForm({ ...passwordForm, oldPassword: event.target.value })}
+                    required
+                  />
+                </label>
+                <label>
+                  新密码
+                  <input
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })}
+                    required
+                  />
+                </label>
+                <div className="form-actions">
+                  <button type="submit">更新密码</button>
+                </div>
+              </form>
+            )}
 
-      <form onSubmit={onChangePassword}>
-        <h2>修改密码</h2>
-        <div className="row">
-          <label>
-            邮箱验证码
-            <input
-              value={securityCode}
-              onChange={(event) => setSecurityCode(event.target.value)}
-              autoComplete="one-time-code"
-              required
-            />
-          </label>
-          <button
-            type="button"
-            onClick={sendCode}
-            disabled={!profile.email || sending || cooldown > 0}
-          >
-            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
-          </button>
-        </div>
-        <label>
-          旧密码
-          <input
-            type="password"
-            value={passwordForm.oldPassword}
-            onChange={(event) => setPasswordForm({ ...passwordForm, oldPassword: event.target.value })}
-            required
-          />
-        </label>
-        <label>
-          新密码
-          <input
-            type="password"
-            value={passwordForm.newPassword}
-            onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })}
-            required
-          />
-        </label>
-        <button type="submit">更新密码</button>
-      </form>
-
-      <div className="divider" />
-
-      <div>
-        <h2>注销账号</h2>
-        <p className="meta">此操作将删除你的账号与所有数据，无法恢复。</p>
-        <div className="row">
-          <label>
-            邮箱验证码
-            <input
-              value={securityCode}
-              onChange={(event) => setSecurityCode(event.target.value)}
-              autoComplete="one-time-code"
-              required
-            />
-          </label>
-          <button
-            type="button"
-            onClick={sendCode}
-            disabled={!profile.email || sending || cooldown > 0}
-          >
-            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
-          </button>
-        </div>
-        <div style={{ marginTop: "12px" }}>
-          <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
+            {section === "danger" && (
+              <div className="stack">
+                <div className="stack-tight">
+                  <h2>注销账号</h2>
+                  <p className="page-subtitle">此操作将删除你的账号与所有数据，无法恢复。</p>
+                </div>
+                <div className="row code-row field-top-gap">
+                  <label>
+                    邮箱验证码
+                    <input
+                      value={securityCode}
+                      onChange={(event) => setSecurityCode(event.target.value)}
+                      autoComplete="one-time-code"
+                      required
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={sendCode}
+                    disabled={!profile.email || sending || cooldown > 0}
+                  >
+                    {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+                  </button>
+                </div>
+                <div className="form-actions">
+                  <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

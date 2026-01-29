@@ -16,6 +16,7 @@ export default function ApplicationForm() {
     resume: ""
   });
   const [status, setStatus] = useState("");
+  const [step, setStep] = useState("basic");
 
   useEffect(() => {
     getMyApplication()
@@ -71,106 +72,145 @@ export default function ApplicationForm() {
   };
 
   return (
-    <section>
-      <h1>面试申请</h1>
-      {status && <p className="hint">{status}</p>}
-      <form className="grid" onSubmit={onSubmit}>
-        <label>
-          姓名
-          <input
-            value={form.realName}
-            onChange={(event) => setForm({ ...form, realName: event.target.value })}
-            required
-          />
-        </label>
-        <label>
-          手机号
-          <input
-            value={form.phone}
-            onChange={(event) => setForm({ ...form, phone: event.target.value })}
-            required
-          />
-        </label>
-        <fieldset>
-          <legend>性别</legend>
-          <div className="row radio-row">
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="male"
-                checked={form.gender === "male"}
-                onChange={(event) => setForm({ ...form, gender: event.target.value })}
-                required
-              />
-              男
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="female"
-                checked={form.gender === "female"}
-                onChange={(event) => setForm({ ...form, gender: event.target.value })}
-                required
-              />
-              女
-            </label>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">面试申请</h1>
+          <p className="page-subtitle">填写你的基础信息与方向偏好，简历可用 Markdown。</p>
+        </div>
+      </div>
+      <section className="card profile-shell">
+        {status && <p className="hint">{status}</p>}
+        <div className="profile-layout">
+          <aside className="profile-nav nav-static">
+            <button
+              type="button"
+              className={`nav-item ${step === "basic" ? "is-active" : ""}`}
+              onClick={() => setStep("basic")}
+            >
+              基础资料
+            </button>
+            <button
+              type="button"
+              className={`nav-item ${step === "directions" ? "is-active" : ""}`}
+              onClick={() => setStep("directions")}
+            >
+              方向选择
+            </button>
+          </aside>
+          <div className="profile-panel">
+            <form className="grid" onSubmit={onSubmit}>
+              {step === "basic" && (
+                <>
+                  <label>
+                    姓名
+                    <input
+                      value={form.realName}
+                      onChange={(event) => setForm({ ...form, realName: event.target.value })}
+                      required
+                    />
+                  </label>
+                  <label>
+                    手机号
+                    <input
+                      value={form.phone}
+                      onChange={(event) => setForm({ ...form, phone: event.target.value })}
+                      required
+                    />
+                  </label>
+                  <fieldset>
+                    <legend>性别</legend>
+                    <div className="row radio-row">
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="male"
+                          checked={form.gender === "male"}
+                          onChange={(event) => setForm({ ...form, gender: event.target.value })}
+                          required
+                        />
+                        男
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="female"
+                          checked={form.gender === "female"}
+                          onChange={(event) => setForm({ ...form, gender: event.target.value })}
+                          required
+                        />
+                        女
+                      </label>
+                    </div>
+                  </fieldset>
+                  <label>
+                    院系
+                    <input
+                      value={form.department}
+                      onChange={(event) => setForm({ ...form, department: event.target.value })}
+                      required
+                    />
+                  </label>
+                  <label>
+                    专业
+                    <input
+                      value={form.major}
+                      onChange={(event) => setForm({ ...form, major: event.target.value })}
+                      required
+                    />
+                  </label>
+                  <label>
+                    学号
+                    <input
+                      value={form.studentId}
+                      onChange={(event) => setForm({ ...form, studentId: event.target.value })}
+                      required
+                    />
+                  </label>
+                </>
+              )}
+
+              {step === "directions" && (
+                <>
+                  <fieldset>
+                    <legend>面试方向（可多选）</legend>
+                    <div className="tags">
+                      {DIRECTIONS.map((direction) => (
+                        <label key={direction} className="tag">
+                          <input
+                            type="checkbox"
+                            checked={form.directions.includes(direction)}
+                            onChange={() => toggleDirection(direction)}
+                          />
+                          {direction}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                  <label className="full">
+                    简历（支持 Markdown，可选）
+                    <textarea
+                      rows={6}
+                      value={form.resume || ""}
+                      onChange={(event) => setForm({ ...form, resume: event.target.value })}
+                    />
+                  </label>
+                  <div className="divider" />
+                  <MarkdownRenderer content={form.resume} />
+                </>
+              )}
+              <div className="form-actions">
+                <button type="submit">{step === "directions" ? "提交申请" : "保存"}</button>
+                {step === "directions" && (
+                  <button type="button" onClick={onDelete}>删除我的申请</button>
+                )}
+              </div>
+            </form>
           </div>
-        </fieldset>
-        <label>
-          院系
-          <input
-            value={form.department}
-            onChange={(event) => setForm({ ...form, department: event.target.value })}
-            required
-          />
-        </label>
-        <label>
-          专业
-          <input
-            value={form.major}
-            onChange={(event) => setForm({ ...form, major: event.target.value })}
-            required
-          />
-        </label>
-        <label>
-          学号
-          <input
-            value={form.studentId}
-            onChange={(event) => setForm({ ...form, studentId: event.target.value })}
-            required
-          />
-        </label>
-        <fieldset>
-          <legend>面试方向（可多选）</legend>
-          <div className="tags">
-            {DIRECTIONS.map((direction) => (
-              <label key={direction} className="tag">
-                <input
-                  type="checkbox"
-                  checked={form.directions.includes(direction)}
-                  onChange={() => toggleDirection(direction)}
-                />
-                {direction}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <label className="full">
-          简历（支持 Markdown，可选）
-          <textarea
-            rows={6}
-            value={form.resume || ""}
-            onChange={(event) => setForm({ ...form, resume: event.target.value })}
-          />
-        </label>
-        <button type="submit">提交申请</button>
-        <button type="button" onClick={onDelete}>删除我的申请</button>
-      </form>
-      <div className="divider" />
-      <h2>简历预览</h2>
-      <MarkdownRenderer content={form.resume} />
+        </div>
+      </section>
     </section>
   );
 }

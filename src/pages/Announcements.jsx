@@ -19,21 +19,33 @@ export default function Announcements() {
   }, []);
 
   return (
-    <section>
-      <h1>公告</h1>
+    <section className="page">
+      <div className="page-header">
+        <div className="stack-tight">
+          <h1 className="page-title">公告</h1>
+          <p className="page-subtitle">最新通知、面试安排与重要提醒。</p>
+        </div>
+      </div>
       {error && <p className="error">{error}</p>}
       <div className="grid single">
         {items.map((item) => (
           <article key={item.id} className={`card ${item.pinned ? "pinned" : ""}`}>
-            <h2>{item.title}</h2>
-            <div className="meta">
-              {visibilityLabel(item)} · 发布人 {item.authorNickname || "未知"} · {new Date(item.createdAt).toLocaleString()}
+            <div className="card-header">
+              <h2>{item.title}</h2>
+              {item.pinned && <span className="pill">置顶</span>}
             </div>
-            <MarkdownRenderer content={item.content} />
+            <div className="inline-meta">
+              <span>{visibilityLabel(item)}</span>
+              <span>{item.authorNickname || "未知"}</span>
+              <span>{new Date(item.createdAt).toLocaleString()}</span>
+            </div>
+            <div className="card-body">
+              <MarkdownRenderer content={item.content} />
+            </div>
           </article>
         ))}
       </div>
-      {!items.length && !error && <p>暂无公告。</p>}
+      {!items.length && !error && <p className="meta">暂无公告。</p>}
     </section>
   );
 }

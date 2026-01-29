@@ -352,7 +352,7 @@ export default function CandidateDetail() {
                         <>
                           <MarkdownRenderer content={comment.content || ""} />
                           <p className="meta">
-                            {comment.interviewerName || "面试官"} · {formatDate(comment.createdAt)}
+                            {comment.interviewerName || "面试官"} · {formatDate(comment.updatedAt || comment.createdAt)}
                           </p>
                           {canManageComment(comment) && (
                             <div className="row">

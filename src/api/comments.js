@@ -9,7 +9,8 @@ export function listComments(intervieweeId) {
       intervieweeId: comment.interviewee_id || comment.intervieweeId,
       interviewerId: comment.interviewer_id || comment.interviewerId,
       interviewerName: comment.interviewer_name || comment.interviewerName,
-      createdAt: comment.created_at || comment.createdAt
+      createdAt: comment.created_at || comment.createdAt,
+      updatedAt: comment.updated_at || comment.updatedAt
     }))
   }));
 }

@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext.jsx";
 import * as authApi from "../api/auth.js";
 import { updateProfile, deleteMe } from "../api/users.js";
 
+const DIRECTIONS = ["Web", "Pwn", "Reverse", "Crypto", "Misc", "Dev", "Art"];
+
 export default function Profile() {
   const { user, refresh, logout } = useAuth();
   const navigate = useNavigate();
@@ -11,9 +13,10 @@ export default function Profile() {
     email: "",
     nickname: "",
     signature: "",
-    emailCode: ""
+    directions: []
   });
   const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
+  const [securityCode, setSecurityCode] = useState("");
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
@@ -30,7 +33,7 @@ export default function Profile() {
         email: user.email || "",
         nickname: user.nickname || "",
         signature: user.signature || "",
-        emailCode: ""
+        directions: user.directions || []
       });
     }
   }, [user]);
@@ -64,8 +67,9 @@ export default function Profile() {
     event.preventDefault();
     setStatus("");
     try {
-      await authApi.changePassword(passwordForm);
+      await authApi.changePassword({ ...passwordForm, emailCode: securityCode });
       setPasswordForm({ oldPassword: "", newPassword: "" });
+      setSecurityCode("");
       setStatus("密码已更新。");
     } catch (error) {
       setStatus(error.message || "修改密码失败。");
@@ -78,7 +82,7 @@ export default function Profile() {
       return;
     }
     try {
-      await deleteMe();
+      await deleteMe({ emailCode: securityCode });
       await logout();
       navigate("/register");
     } catch (error) {
@@ -100,24 +104,6 @@ export default function Profile() {
             required
           />
         </label>
-        <div className="row">
-          <label>
-            邮箱验证码
-            <input
-              value={profile.emailCode}
-              onChange={(event) => setProfile({ ...profile, emailCode: event.target.value })}
-              autoComplete="one-time-code"
-              required
-            />
-          </label>
-          <button
-            type="button"
-            onClick={sendCode}
-            disabled={!profile.email || sending || cooldown > 0}
-          >
-            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
-          </button>
-        </div>
         <label>
           昵称
           <input
@@ -133,6 +119,31 @@ export default function Profile() {
             onChange={(event) => setProfile({ ...profile, signature: event.target.value })}
           />
         </label>
+        {user?.role === "interviewer" && (
+          <fieldset>
+            <legend>方向</legend>
+            <div className="tags">
+              {DIRECTIONS.map((direction) => (
+                <label key={direction} className="tag">
+                  <input
+                    type="checkbox"
+                    checked={(profile.directions || []).includes(direction)}
+                    onChange={() =>
+                      setProfile((prev) => {
+                        const current = prev.directions || [];
+                        const next = current.includes(direction)
+                          ? current.filter((item) => item !== direction)
+                          : [...current, direction];
+                        return { ...prev, directions: next };
+                      })
+                    }
+                  />
+                  {direction}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
         <button type="submit">保存资料</button>
       </form>
 
@@ -140,6 +151,24 @@ export default function Profile() {
 
       <form onSubmit={onChangePassword}>
         <h2>修改密码</h2>
+        <div className="row">
+          <label>
+            邮箱验证码
+            <input
+              value={securityCode}
+              onChange={(event) => setSecurityCode(event.target.value)}
+              autoComplete="one-time-code"
+              required
+            />
+          </label>
+          <button
+            type="button"
+            onClick={sendCode}
+            disabled={!profile.email || sending || cooldown > 0}
+          >
+            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+          </button>
+        </div>
         <label>
           旧密码
           <input
@@ -166,6 +195,15 @@ export default function Profile() {
       <div>
         <h2>注销账号</h2>
         <p className="meta">此操作将删除你的账号与所有数据，无法恢复。</p>
+        <label>
+          邮箱验证码
+          <input
+            value={securityCode}
+            onChange={(event) => setSecurityCode(event.target.value)}
+            autoComplete="one-time-code"
+            required
+          />
+        </label>
         <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
       </div>
     </section>

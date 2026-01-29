@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const THEME_KEY = "xdsec_theme";
+const ACCENT_KEY = "xdsec_accent";
 
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const [theme, setTheme] = useState(() => window.localStorage.getItem(THEME_KEY) || "system");
+  const [accent, setAccent] = useState(() => window.localStorage.getItem(ACCENT_KEY) || "default");
 
   useEffect(() => {
     const root = document.documentElement;
@@ -17,6 +19,16 @@ export default function Layout({ children }) {
     }
     window.localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (accent === "default") {
+      root.removeAttribute("data-accent");
+    } else {
+      root.setAttribute("data-accent", accent);
+    }
+    window.localStorage.setItem(ACCENT_KEY, accent);
+  }, [accent]);
 
   return (
     <div className="app">
@@ -31,6 +43,14 @@ export default function Layout({ children }) {
           {user?.role === "interviewer" && <Link to="/interviewer">面试官</Link>}
         </div>
         <div className="nav-right">
+          <label className="theme-select">
+            <select value={accent} onChange={(event) => setAccent(event.target.value)}>
+              <option value="default">浅薰衣草</option>
+              <option value="mist">海盐烟蓝</option>
+              <option value="sage">浅鼠尾草</option>
+              <option value="peach">柔光杏橙</option>
+            </select>
+          </label>
           <label className="theme-select">
             <select value={theme} onChange={(event) => setTheme(event.target.value)}>
               <option value="system">跟随系统</option>

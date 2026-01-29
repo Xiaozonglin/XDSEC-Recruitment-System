@@ -17,6 +17,16 @@
   --hint: #3f5f36;
   --error: #9f2f26;
   --link: #5f5390;
+  --theme-accent: #7a6ca9;
+  --code-bg: #f2eff7;
+  --code-border: #e1d9ee;
+  --code-text: #2f2a38;
+  --code-comment: #7b7487;
+  --code-keyword: #5f5390;
+  --code-string: #7a4f55;
+  --code-number: #7a6ca9;
+  --code-title: #3a4b6e;
+  --code-built-in: #4d6a5c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,7 +46,18 @@
     --hint: #b4d39b;
     --error: #ff8a7a;
     --link: #b9acd9;
+    --theme-accent: #7a6ca9;
+    --code-bg: #1a1620;
+    --code-border: #2a2333;
+    --code-text: #e7e2ef;
+    --code-comment: #9a92a8;
+    --code-keyword: #c7b7ff;
+    --code-string: #f3b3bd;
+    --code-number: #bda8ff;
+    --code-title: #a7c0ff;
+    --code-built-in: #9dd6b8;
   }
+
 }
 
 :root[data-theme="light"] {
@@ -55,6 +76,16 @@
   --hint: #3f5f36;
   --error: #9f2f26;
   --link: #5f5390;
+  --theme-accent: #7a6ca9;
+  --code-bg: #f2eff7;
+  --code-border: #e1d9ee;
+  --code-text: #2f2a38;
+  --code-comment: #7b7487;
+  --code-keyword: #5f5390;
+  --code-string: #7a4f55;
+  --code-number: #7a6ca9;
+  --code-title: #3a4b6e;
+  --code-built-in: #4d6a5c;
 }
 
 :root[data-theme="dark"] {
@@ -73,6 +104,144 @@
   --hint: #b4d39b;
   --error: #ff8a7a;
   --link: #b9acd9;
+  --theme-accent: #7a6ca9;
+  --code-bg: #1a1620;
+  --code-border: #2a2333;
+  --code-text: #e7e2ef;
+  --code-comment: #9a92a8;
+  --code-keyword: #c7b7ff;
+  --code-string: #f3b3bd;
+  --code-number: #bda8ff;
+  --code-title: #a7c0ff;
+  --code-built-in: #9dd6b8;
+}
+
+:root[data-accent="mist"] {
+  --page-bg: #f2f6f9;
+  --page-bg-soft: #e7eff5;
+  --page-surface: #ffffff;
+  --border: #dbe3ea;
+  --input-border: #cfd9e2;
+  --tag-bg: #e6eef4;
+  --text-muted: #5f6d78;
+  --brand: #6f93b5;
+  --brand-soft: #c5d6e7;
+  --link: #50749a;
+  --theme-accent: #6f93b5;
+}
+
+:root[data-theme="dark"][data-accent="mist"] {
+  --page-bg: #12161a;
+  --page-bg-soft: #1a2026;
+  --page-surface: #202730;
+  --border: #2b3440;
+  --input-border: #384150;
+  --tag-bg: #26303b;
+  --text-muted: #b6c2cd;
+  --brand: #6f93b5;
+  --brand-soft: #3d5166;
+  --link: #9fb7cf;
+  --theme-accent: #6f93b5;
+}
+
+:root[data-accent="sage"] {
+  --page-bg: #f3f7f5;
+  --page-bg-soft: #e8efec;
+  --page-surface: #ffffff;
+  --border: #d9e4df;
+  --input-border: #ccd9d2;
+  --tag-bg: #e6efe9;
+  --text-muted: #5d6f66;
+  --brand: #6f9a80;
+  --brand-soft: #c8ded1;
+  --link: #4f7c63;
+  --theme-accent: #6f9a80;
+}
+
+:root[data-theme="dark"][data-accent="sage"] {
+  --page-bg: #131816;
+  --page-bg-soft: #1b221f;
+  --page-surface: #202823;
+  --border: #2d3832;
+  --input-border: #3a473f;
+  --tag-bg: #273128;
+  --text-muted: #b7c4bc;
+  --brand: #6f9a80;
+  --brand-soft: #3d5648;
+  --link: #9bbca6;
+  --theme-accent: #6f9a80;
+}
+
+:root[data-accent="peach"] {
+  --page-bg: #fbf4f1;
+  --page-bg-soft: #f3e7e2;
+  --page-surface: #ffffff;
+  --border: #e6d7d1;
+  --input-border: #dccbc3;
+  --tag-bg: #f2e4df;
+  --text-muted: #6f605a;
+  --brand: #c48773;
+  --brand-soft: #efd2c7;
+  --link: #9f6553;
+  --theme-accent: #c48773;
+}
+
+:root[data-theme="dark"][data-accent="peach"] {
+  --page-bg: #1a1412;
+  --page-bg-soft: #221b18;
+  --page-surface: #261f1c;
+  --border: #3a2f2a;
+  --input-border: #4a3a34;
+  --tag-bg: #2f2622;
+  --text-muted: #c7b8b2;
+  --brand: #c48773;
+  --brand-soft: #6b4a3e;
+  --link: #d1a08f;
+  --theme-accent: #c48773;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme])[data-accent="mist"] {
+    --page-bg: #12161a;
+    --page-bg-soft: #1a2026;
+    --page-surface: #202730;
+    --border: #2b3440;
+    --input-border: #384150;
+    --tag-bg: #26303b;
+    --text-muted: #b6c2cd;
+    --brand: #6f93b5;
+    --brand-soft: #3d5166;
+    --link: #9fb7cf;
+    --theme-accent: #6f93b5;
+  }
+
+  :root:not([data-theme])[data-accent="sage"] {
+    --page-bg: #131816;
+    --page-bg-soft: #1b221f;
+    --page-surface: #202823;
+    --border: #2d3832;
+    --input-border: #3a473f;
+    --tag-bg: #273128;
+    --text-muted: #b7c4bc;
+    --brand: #6f9a80;
+    --brand-soft: #3d5648;
+    --link: #9bbca6;
+    --theme-accent: #6f9a80;
+  }
+
+  :root:not([data-theme])[data-accent="peach"] {
+    --page-bg: #1a1412;
+    --page-bg-soft: #221b18;
+    --page-surface: #261f1c;
+    --border: #3a2f2a;
+    --input-border: #4a3a34;
+    --tag-bg: #2f2622;
+    --text-muted: #c7b8b2;
+    --brand: #c48773;
+    --brand-soft: #6b4a3e;
+    --link: #d1a08f;
+    --theme-accent: #c48773;
+  }
 }
 
 * {
@@ -198,6 +367,13 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(122, 108, 169, 0.2);
 }
 
+select option:checked,
+select option:focus,
+select option:hover {
+  background-color: var(--brand);
+  color: #ffffff;
+}
+
 button {
   padding: 10px 16px;
   border-radius: 10px;
@@ -257,6 +433,10 @@ button:disabled {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.grid.single {
+  grid-template-columns: 1fr;
+}
+
 .full {
   grid-column: 1 / -1;
 }
@@ -267,6 +447,19 @@ button:disabled {
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   border: 1px solid var(--border);
+}
+
+.card h1,
+.card h2,
+.card h3,
+.card p,
+.panel,
+.panel p,
+.meta,
+.markdown,
+.comment {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .avatar {
@@ -295,16 +488,39 @@ button:disabled {
 }
 
 .tags {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 8px;
 }
 
 .tag {
   background: var(--tag-bg);
-  padding: 6px 12px;
-  border-radius: 999px;
+  padding: 10px 8px 8px;
+  border-radius: 12px;
   font-size: 12px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.tag input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--brand);
+  border-radius: 6px;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  background: transparent;
+}
+
+.tag input[type="checkbox"]:checked {
+  background: var(--brand);
+  box-shadow: inset 0 0 0 3px var(--page-surface);
 }
 
 .hint {
@@ -387,6 +603,126 @@ button:disabled {
 .markdown h2,
 .markdown h3 {
   margin-top: 16px;
+}
+
+.markdown .code-block {
+  border: 1px solid var(--code-border);
+  border-radius: 14px;
+  background: var(--code-bg);
+  overflow: hidden;
+  margin: 16px 0;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.markdown .code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid var(--code-border);
+}
+
+:root[data-theme="dark"] .markdown .code-header {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown .code-header {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.markdown .code-header .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.markdown .code-header .dots {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.markdown .code-copy {
+  background: transparent;
+  border: 1px solid var(--code-border);
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.markdown .code-copy:hover {
+  color: var(--text-primary);
+  border-color: var(--brand);
+}
+
+.markdown .code-header .dot.red {
+  background: #ff5f56;
+}
+
+.markdown .code-header .dot.yellow {
+  background: #ffbd2e;
+}
+
+.markdown .code-header .dot.green {
+  background: #27c93f;
+}
+
+.markdown pre {
+  margin: 0;
+}
+
+.markdown pre code {
+  display: block;
+  padding: 14px 16px 16px;
+  font-family: "SF Mono", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--code-text);
+  background: transparent;
+}
+
+.markdown pre code.hljs-comment,
+.markdown .hljs-comment,
+.markdown .hljs-quote {
+  color: var(--code-comment);
+}
+
+.markdown .hljs-keyword,
+.markdown .hljs-selector-tag,
+.markdown .hljs-literal,
+.markdown .hljs-section {
+  color: var(--code-keyword);
+}
+
+.markdown .hljs-string,
+.markdown .hljs-title,
+.markdown .hljs-name,
+.markdown .hljs-type,
+.markdown .hljs-attribute {
+  color: var(--code-string);
+}
+
+.markdown .hljs-number,
+.markdown .hljs-symbol,
+.markdown .hljs-bullet {
+  color: var(--code-number);
+}
+
+.markdown .hljs-function .hljs-title,
+.markdown .hljs-title.class_ {
+  color: var(--code-title);
+}
+
+.markdown .hljs-built_in,
+.markdown .hljs-builtin-name,
+.markdown .hljs-params {
+  color: var(--code-built-in);
 }
 
 section > h1,

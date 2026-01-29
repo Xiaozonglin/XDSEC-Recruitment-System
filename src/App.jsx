@@ -12,6 +12,7 @@ import MyTasks from "./pages/MyTasks.jsx";
 import InterviewerDashboard from "./pages/InterviewerDashboard.jsx";
 import ManageAnnouncements from "./pages/ManageAnnouncements.jsx";
 import CandidateList from "./pages/CandidateList.jsx";
+import CandidateDetail from "./pages/CandidateDetail.jsx";
 import ManageTasks from "./pages/ManageTasks.jsx";
 import UserDirectory from "./pages/UserDirectory.jsx";
 import "./styles.css";
@@ -68,6 +69,7 @@ export default function App() {
           <Route index element={<Navigate to="announcements" replace />} />
           <Route path="announcements" element={<ManageAnnouncements />} />
           <Route path="candidates" element={<CandidateList />} />
+          <Route path="candidates/:id" element={<CandidateDetail />} />
           <Route path="tasks" element={<ManageTasks />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

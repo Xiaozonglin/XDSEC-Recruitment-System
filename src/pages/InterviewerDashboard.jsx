@@ -9,9 +9,6 @@ export default function InterviewerDashboard() {
         <Link to="announcements">公告</Link>
         <Link to="candidates">候选人</Link>
         <Link to="tasks">任务</Link>
-        <a href="/api/v2/export/applications" target="_blank" rel="noreferrer">
-          导出申请
-        </a>
       </div>
       <Outlet />
     </section>

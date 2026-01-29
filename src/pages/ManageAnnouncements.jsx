@@ -92,7 +92,7 @@ export default function ManageAnnouncements() {
         <button type="submit">{editingId ? "发布修改" : "发布"}</button>
       </form>
 
-      <div className="grid two">
+      <div className="grid single">
         {items.map((item) => (
           <article key={item.id} className={`card ${item.pinned ? "pinned" : ""}`}>
             <h3>{item.title}</h3>

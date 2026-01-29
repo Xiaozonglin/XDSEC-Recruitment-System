@@ -86,6 +86,7 @@ export default function ManageTasks() {
             value={userQuery}
             onChange={(event) => setUserQuery(event.target.value)}
             placeholder="输入关键词进行搜索"
+            autoComplete="off"
           />
         </label>
         {userQuery && userOptions.length > 0 && (
@@ -126,7 +127,7 @@ export default function ManageTasks() {
         <button type="submit">{editingId ? "发布修改" : "布置任务"}</button>
       </form>
 
-      <div className="grid two">
+        <div className="grid single">
         {items.map((task) => (
           <article key={task.id} className="card">
             <h3>{task.title}</h3>

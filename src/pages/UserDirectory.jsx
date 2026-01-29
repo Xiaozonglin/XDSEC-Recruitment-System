@@ -29,7 +29,7 @@ export default function UserDirectory() {
     <section>
       <h1>成员目录</h1>
       {status && <p className="hint">{status}</p>}
-      <div className="row">
+      <div className="row" style={{ marginBottom: "12px" }}>
         <label>
           角色
           <select value={role} onChange={(event) => setRole(event.target.value)}>
@@ -41,15 +41,17 @@ export default function UserDirectory() {
       <div className="grid two">
         {items.map((user) => (
           <article key={user.id} className="card">
-            <div className="row">
-              <img
-                className="avatar"
-                src={gravatarUrl(user.email, 72)}
-                alt={user.nickname || "avatar"}
-              />
-              <div>
-                <h3>{user.nickname || "匿名用户"}</h3>
-                <p className="meta">{user.signature || "暂无个性签名"}</p>
+            <div>
+              <h3 style={{ textAlign: "left" }}>{user.nickname || "匿名用户"}</h3>
+              <div className="row">
+                <img
+                  className="avatar"
+                  src={gravatarUrl(user.email, 72)}
+                  alt={user.nickname || "avatar"}
+                />
+                <div>
+                  <p className="meta">{user.signature || "暂无个性签名"}</p>
+                </div>
               </div>
             </div>
             {user.directions && (

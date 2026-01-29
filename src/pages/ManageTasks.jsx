@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { listTasks, createTask, updateTask, deleteTask } from "../api/tasks.js";
 import { listUsers } from "../api/users.js";
 import MarkdownRenderer from "../components/MarkdownRenderer.jsx";
 
 export default function ManageTasks() {
+  const location = useLocation();
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({ title: "", description: "", targetUserId: "" });
   const [status, setStatus] = useState("");
@@ -20,6 +22,14 @@ export default function ManageTasks() {
   useEffect(() => {
     load();
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const targetUserId = params.get("targetUserId");
+    if (targetUserId) {
+      setForm((prev) => ({ ...prev, targetUserId }));
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -71,7 +81,7 @@ export default function ManageTasks() {
     <section>
       <h2>任务管理</h2>
       {status && <p className="hint">{status}</p>}
-      <form className="form-card" onSubmit={onSubmit}>
+      <form className="form-card" onSubmit={onSubmit} style={{ marginBottom: "16px" }}>
         <label>
           标题
           <input
@@ -141,8 +151,10 @@ export default function ManageTasks() {
                 <MarkdownRenderer content={task.report} />
               </>
             )}
-            <button type="button" onClick={() => onEdit(task)}>编辑</button>
-            <button type="button" onClick={() => onDelete(task.id)}>删除</button>
+            <div className="row">
+              <button type="button" onClick={() => onEdit(task)}>编辑</button>
+              <button type="button" onClick={() => onDelete(task.id)}>删除</button>
+            </div>
           </article>
         ))}
       </div>

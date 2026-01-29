@@ -15,11 +15,14 @@ export default function Profile() {
     signature: "",
     directions: []
   });
+  const [emailCode, setEmailCode] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "" });
   const [securityCode, setSecurityCode] = useState("");
   const [status, setStatus] = useState("");
   const [sending, setSending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [originalEmail, setOriginalEmail] = useState("");
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -35,6 +38,7 @@ export default function Profile() {
         signature: user.signature || "",
         directions: user.directions || []
       });
+      setOriginalEmail(user.email || "");
     }
   }, [user]);
 
@@ -55,8 +59,20 @@ export default function Profile() {
     event.preventDefault();
     setStatus("");
     try {
-      await updateProfile(profile);
+      const emailChanged = profile.email !== originalEmail;
+      const payload = {
+        ...profile,
+        ...(emailChanged
+          ? { currentPassword, emailCode }
+          : {})
+      };
+      await updateProfile(payload);
       await refresh();
+      if (emailChanged) {
+        setEmailCode("");
+        setCurrentPassword("");
+        setOriginalEmail(profile.email);
+      }
       setStatus("个人资料已更新。");
     } catch (error) {
       setStatus(error.message || "更新个人资料失败。");
@@ -95,6 +111,27 @@ export default function Profile() {
       <h1>个人资料</h1>
       {status && <p className="hint">{status}</p>}
       <form onSubmit={onSaveProfile}>
+        {user?.role === "interviewee" && (
+          <>
+            <fieldset>
+              <legend>通过方向</legend>
+              <div className="tags">
+                {DIRECTIONS.map((direction) => (
+                  <label key={direction} className="tag">
+                    <input
+                      type="checkbox"
+                      checked={(user.passedDirections || []).includes(direction)}
+                      readOnly
+                      disabled
+                    />
+                    {direction}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div className="divider" />
+          </>
+        )}
         <label>
           邮箱
           <input
@@ -104,6 +141,37 @@ export default function Profile() {
             required
           />
         </label>
+        {profile.email !== originalEmail && (
+          <>
+            <div className="row">
+              <label>
+                新邮箱验证码
+                <input
+                  value={emailCode}
+                  onChange={(event) => setEmailCode(event.target.value)}
+                  autoComplete="one-time-code"
+                  required
+                />
+              </label>
+              <button
+                type="button"
+                onClick={sendCode}
+                disabled={!profile.email || sending || cooldown > 0}
+              >
+                {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+              </button>
+            </div>
+            <label>
+              当前密码
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
+                required
+              />
+            </label>
+          </>
+        )}
         <label>
           昵称
           <input
@@ -195,16 +263,27 @@ export default function Profile() {
       <div>
         <h2>注销账号</h2>
         <p className="meta">此操作将删除你的账号与所有数据，无法恢复。</p>
-        <label>
-          邮箱验证码
-          <input
-            value={securityCode}
-            onChange={(event) => setSecurityCode(event.target.value)}
-            autoComplete="one-time-code"
-            required
-          />
-        </label>
-        <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
+        <div className="row">
+          <label>
+            邮箱验证码
+            <input
+              value={securityCode}
+              onChange={(event) => setSecurityCode(event.target.value)}
+              autoComplete="one-time-code"
+              required
+            />
+          </label>
+          <button
+            type="button"
+            onClick={sendCode}
+            disabled={!profile.email || sending || cooldown > 0}
+          >
+            {cooldown > 0 ? `重新发送(${cooldown}s)` : "发送验证码"}
+          </button>
+        </div>
+        <div style={{ marginTop: "12px" }}>
+          <button type="button" onClick={onDeleteAccount}>删除我的账号</button>
+        </div>
       </div>
     </section>
   );

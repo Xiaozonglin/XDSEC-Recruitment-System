@@ -8,7 +8,9 @@ export function listAnnouncements() {
       id: item.uuid || item.id,
       authorNickname: item.author_nickname || item.authorNickname,
       createdAt: item.created_at || item.createdAt,
-      updatedAt: item.updated_at || item.updatedAt
+      updatedAt: item.updated_at || item.updatedAt,
+      visibility: item.visibility || "public",
+      allowedStatuses: item.allowed_statuses || item.allowedStatuses || []
     }))
   }));
 }

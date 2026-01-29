@@ -1,6 +1,8 @@
 :root {
   color-scheme: light;
   font-family: "Anthropic Serif", "Times New Roman", "Noto Serif", serif;
+  --font-serif: "Anthropic Serif", "Times New Roman", "Noto Serif", serif;
+  --font-sans: "Anthropic Sans", "Inter", "Helvetica Neue", "Arial", sans-serif;
   background: var(--page-bg);
   color: var(--text-primary);
   --page-bg: #f8f6f3;
@@ -18,8 +20,8 @@
   --error: #9f2f26;
   --link: #5f5390;
   --theme-accent: #7a6ca9;
-  --code-bg: #f2eff7;
-  --code-border: #e1d9ee;
+  --code-bg: color-mix(in srgb, var(--brand-soft) 45%, #ffffff);
+  --code-border: color-mix(in srgb, var(--brand) 30%, #ffffff);
   --code-text: #2f2a38;
   --code-comment: #7b7487;
   --code-keyword: #5f5390;
@@ -47,8 +49,8 @@
     --error: #ff8a7a;
     --link: #b9acd9;
     --theme-accent: #7a6ca9;
-    --code-bg: #1a1620;
-    --code-border: #2a2333;
+    --code-bg: color-mix(in srgb, var(--brand-soft) 45%, #0f0d13);
+    --code-border: color-mix(in srgb, var(--brand) 35%, #0f0d13);
     --code-text: #e7e2ef;
     --code-comment: #9a92a8;
     --code-keyword: #c7b7ff;
@@ -77,8 +79,8 @@
   --error: #9f2f26;
   --link: #5f5390;
   --theme-accent: #7a6ca9;
-  --code-bg: #f2eff7;
-  --code-border: #e1d9ee;
+  --code-bg: color-mix(in srgb, var(--brand-soft) 45%, #ffffff);
+  --code-border: color-mix(in srgb, var(--brand) 30%, #ffffff);
   --code-text: #2f2a38;
   --code-comment: #7b7487;
   --code-keyword: #5f5390;
@@ -105,8 +107,8 @@
   --error: #ff8a7a;
   --link: #b9acd9;
   --theme-accent: #7a6ca9;
-  --code-bg: #1a1620;
-  --code-border: #2a2333;
+  --code-bg: color-mix(in srgb, var(--brand-soft) 45%, #0f0d13);
+  --code-border: color-mix(in srgb, var(--brand) 35%, #0f0d13);
   --code-text: #e7e2ef;
   --code-comment: #9a92a8;
   --code-keyword: #c7b7ff;
@@ -251,6 +253,8 @@
 body {
   margin: 0;
   background: var(--page-bg);
+  font-family: "Anthropic Sans", "Inter", "Helvetica Neue", "Arial", "Noto Sans",
+    "Anthropic Serif", "Noto Serif CJK SC", "Noto Serif CJK TC", "Source Han Serif SC", "Source Han Serif TC", serif;
 }
 
 a {
@@ -269,6 +273,7 @@ a:hover {
 }
 
 .nav {
+  font-family: var(--font-serif);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -304,6 +309,20 @@ a:hover {
   text-transform: uppercase;
   font-size: 12px;
   color: var(--text-muted);
+  font-family: "Anthropic Serif", "Times New Roman", "Noto Serif", serif;
+}
+
+.nav .role-label,
+.nav .role-sep {
+  font-family: "Anthropic Serif", "Times New Roman", "Noto Serif", serif;
+}
+
+.nav .role-nickname.serif {
+  font-family: "Anthropic Serif", "Times New Roman", "Noto Serif", serif;
+}
+
+.nav .role-nickname.sans {
+  font-family: "Anthropic Sans", "Inter", "Helvetica Neue", "Arial", "Noto Sans", sans-serif;
 }
 
 .container {
@@ -420,6 +439,20 @@ button:disabled {
   align-items: flex-end;
 }
 
+.radio-row {
+  align-items: center;
+}
+
+.radio-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-row input[type="radio"] {
+  margin: 0;
+}
+
 .row.form-card {
   padding: 20px;
 }
@@ -502,7 +535,7 @@ button:disabled {
   justify-items: center;
   gap: 6px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .tag input[type="checkbox"] {
@@ -559,9 +592,14 @@ button:disabled {
 }
 
 .footer {
+  font-family: var(--font-serif);
   border-top: 1px solid var(--border);
   background: var(--page-surface);
   padding: 20px 0;
+}
+
+.footer * {
+  font-family: var(--font-serif);
 }
 
 .footer-inner {

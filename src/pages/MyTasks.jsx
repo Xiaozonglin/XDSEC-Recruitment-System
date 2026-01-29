@@ -47,7 +47,9 @@ export default function MyTasks() {
               }
             />
           </label>
-          <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
+          <div style={{ marginTop: "12px" }}>
+            <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
+          </div>
           {task.report && (
             <>
               <h3>最新提交</h3>

@@ -93,7 +93,7 @@ export default function ApplicationForm() {
         </label>
         <fieldset>
           <legend>性别</legend>
-          <div className="row">
+          <div className="row radio-row">
             <label>
               <input
                 type="radio"

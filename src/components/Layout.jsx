@@ -40,7 +40,7 @@ export default function Layout({ children }) {
           {user && <Link to="/directory">成员目录</Link>}
           {user?.role === "interviewee" && <Link to="/application">填写申请</Link>}
           {user?.role === "interviewee" && <Link to="/tasks">我的任务</Link>}
-          {user?.role === "interviewer" && <Link to="/interviewer">面试官</Link>}
+          {user?.role === "interviewer" && <Link to="/interviewer">面试官控制台</Link>}
         </div>
         <div className="nav-right">
           <label className="theme-select">
@@ -60,7 +60,25 @@ export default function Layout({ children }) {
           </label>
           {user ? (
             <>
-              <span className="role">{user.role === "interviewer" ? "面试官" : "面试者"}</span>
+              <span className="role">
+                <span className="role-label">
+                  {user.role === "interviewer" ? "面试官" : "面试者"}
+                </span>
+                {user?.nickname && (
+                  <>
+                    <span className="role-sep"> | </span>
+                    <span
+                      className={
+                        /[\u4e00-\u9fff]/.test(user.nickname)
+                          ? "role-nickname serif"
+                          : "role-nickname sans"
+                      }
+                    >
+                      {user.nickname}
+                    </span>
+                  </>
+                )}
+              </span>
               <button type="button" onClick={logout} className="link-button">退出登录</button>
             </>
           ) : (

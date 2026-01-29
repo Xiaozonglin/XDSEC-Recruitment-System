@@ -41,7 +41,7 @@ export default function CandidateList() {
     <section>
       <h2>候选人列表</h2>
       {status && <p className="hint">{status}</p>}
-      <form className="row form-card" onSubmit={onSearch}>
+      <form className="row form-card" onSubmit={onSearch} style={{ marginBottom: "16px" }}>
         <input
           placeholder="按邮箱或昵称搜索"
           value={query}
@@ -52,15 +52,18 @@ export default function CandidateList() {
       <div className="grid single">
         {users.map((user) => (
           <article key={user.id} className="card">
-            <div className="row">
-              <img
-                className="avatar"
-                src={gravatarUrl(user.email, 72)}
-                alt={user.nickname || "avatar"}
-              />
-              <div>
-                <h3>{user.nickname || user.email}</h3>
-                <p className="meta">{user.signature || "暂无个性签名"}</p>
+            <div>
+              <h3 style={{ textAlign: "left" }}>{user.nickname || user.email}</h3>
+              <div className="row">
+                <img
+                  className="avatar"
+                  src={gravatarUrl(user.email, 72)}
+                  alt={user.nickname || "avatar"}
+                />
+                <div>
+                  <p className="meta">{user.email}</p>
+                  <p className="meta">{user.signature || "暂无个性签名"}</p>
+                </div>
               </div>
             </div>
             <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>

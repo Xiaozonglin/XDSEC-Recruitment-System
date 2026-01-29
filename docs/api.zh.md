@@ -224,38 +224,89 @@ Authorization: Bearer {token}
 
 ```json
 {
-  "ok": true,
-  "data": [
-    {
-      "uuid": "550e8400-e29b-41d4-a716-446655440000",
-      "email": "user@example.com",
-      "nickname": "john_doe",
-      "signature": "Hello world",
-      "role": "interviewee",
-      "status": null,
-      "passed_directions": null,
-      "passed_directions_by": null,
-      "application": {
-        "id": 1,
-        "real_name": "张三",
-        "phone": "13800138000",
-        "gender": "male",
-        "department": "计算机学院",
-        "major": "计算机科学与技术",
-        "student_id": "20240001",
-        "directions": null,
-        "resume": "简历内容...",
-        "user_id": "550e8400-e29b-41d4-a716-446655440000",
-        "created_at": "2026-01-24T10:00:00Z",
-        "updated_at": "2026-01-24T10:00:00Z"
-      },
-      "created_at": "2026-01-24T10:00:00Z",
-      "updated_at": "2026-01-24T10:00:00Z",
-      "pass_word": "$2a$10$..."
-    }
-  ]
+    "data": {
+        "items": [
+            {
+                "application": {
+                    "realName": "林",
+                    "phone": "10000000005",
+                    "gender": "male",
+                    "department": "网信院",
+                    "major": "网络安全",
+                    "studentId": "00000000000",
+                    "directions": "[\"Web\"]",
+                    "resume": "## 这是我的个人简历\n\n我是一个人",
+                    "createdAt": "2026-01-27T15:15:34.686+08:00",
+                    "updatedAt": "2026-01-27T15:15:34.686+08:00"
+                },
+                "comments": [{"content": "...", "interviewerName": "...",} ...],
+                "directions": [
+                    "Web"
+                ],
+                "email": "812568734@qq.com",
+                "id": "e945cb42-5a88-494d-a1ec-8c5a5ed0fcf6",
+                "nickname": "林林",
+                "passedDirections": [
+                    "Web",
+                    "Pwn"
+                ],
+                "passedDirectionsBy": [
+                    "admin"
+                ],
+                "role": "interviewee",
+                "signature": "这是一句话",
+                "status": "r2_pending",
+                "task": {
+                    "createdAt": "2026-01-28 20:33:38",
+                    "description": "你是一个0！\n请提交你是0的报告！",
+                    "id": "91f619a0-fc45-11f0-a1d1-fa3dc6c451ae",
+                    "report": "我是0好吧\n# 我是0！",
+                    "title": "这是一个任务",
+                    "updatedAt": "2026-01-28 22:29:06"
+                }
+            }
+        ]
+    },
+    "ok": true
 }
 ```
+
+### 6. 评论
+
+POST `/comments`
+
+body：
+```json
+{
+	"intervieweeId": "string",
+	"content": "string"
+}
+```
+
+response:
+```json
+{"ok": true}
+```
+
+GET `/comments/uuid`
+
+response:
+```json
+{
+			"ok": true,
+			"data": gin.H{
+				"items": [{
+				"id":             "uuid",
+				"content":        "content",
+				"intervieweeId":   "uuid",
+				"interviewerId":  "uuid",
+				"interviewerName": "string",
+				"createdAt":      "time",
+			}]
+			},
+		}
+```
+
 
 **错误码:**
 

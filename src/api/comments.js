@@ -20,3 +20,14 @@ export function createComment(payload) {
     body: JSON.stringify(payload)
   });
 }
+
+export function updateComment(commentId, payload) {
+  return request(`/comments/${commentId}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function deleteComment(commentId) {
+  return request(`/comments/${commentId}`, { method: "DELETE" });
+}

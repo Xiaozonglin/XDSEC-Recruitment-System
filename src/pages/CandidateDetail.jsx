@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 import { gravatarUrl } from "../utils/gravatar.js";
 import { listUsers, updateRole, updatePassedDirections, deleteUser, getUser } from "../api/users.js";
 import { updateApplicationStatus } from "../api/applications.js";
-import { createComment, listComments } from "../api/comments.js";
+import { createComment, deleteComment, listComments, updateComment } from "../api/comments.js";
 import { listTasks } from "../api/tasks.js";
 import MarkdownRenderer from "../components/MarkdownRenderer.jsx";
 
@@ -28,12 +29,15 @@ const DIRECTIONS = ["Web", "Pwn", "Reverse", "Crypto", "Misc", "Dev", "Art"];
 export default function CandidateDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [status, setStatus] = useState("");
   const [passedInputs, setPassedInputs] = useState([]);
   const [commentInput, setCommentInput] = useState("");
+  const [editingCommentId, setEditingCommentId] = useState("");
+  const [editingContent, setEditingContent] = useState("");
   const [showTasks, setShowTasks] = useState(false);
   const [showApplication, setShowApplication] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -135,6 +139,43 @@ export default function CandidateDetail() {
     }
   };
 
+  const canManageComment = (comment) =>
+    currentUser?.role === "interviewer" && currentUser?.id === comment.interviewerId;
+
+  const onEditComment = (comment) => {
+    setEditingCommentId(comment.id);
+    setEditingContent(comment.content || "");
+  };
+
+  const onSaveComment = async () => {
+    if (!editingCommentId) return;
+    const content = editingContent.trim();
+    if (!content) {
+      setStatus("评论内容不能为空。");
+      return;
+    }
+    try {
+      await updateComment(editingCommentId, { content });
+      setEditingCommentId("");
+      setEditingContent("");
+      await load();
+    } catch (error) {
+      setStatus(error.message || "更新评论失败。");
+    }
+  };
+
+  const onDeleteComment = async (commentId) => {
+    if (!window.confirm("确定删除该评论吗？此操作不可恢复。")) {
+      return;
+    }
+    try {
+      await deleteComment(commentId);
+      await load();
+    } catch (error) {
+      setStatus(error.message || "删除评论失败。");
+    }
+  };
+
   if (!user) {
     return (
       <section>
@@ -148,7 +189,6 @@ export default function CandidateDetail() {
     <section>
       <div className="row" style={{ justifyContent: "space-between" }}>
         <h2>候选人详情</h2>
-        <Link to="/interviewer/candidates">返回候选人列表</Link>
       </div>
       {status && <p className="hint">{status}</p>}
 
@@ -288,10 +328,40 @@ export default function CandidateDetail() {
                 comments.map((comment, index) => (
                   <div key={comment.id}>
                     <div className="panel">
-                      <MarkdownRenderer content={comment.content || ""} />
-                      <p className="meta">
-                        {comment.interviewerName || "面试官"} · {formatDate(comment.createdAt)}
-                      </p>
+                      {editingCommentId === comment.id ? (
+                        <>
+                          <textarea
+                            rows={3}
+                            value={editingContent}
+                            onChange={(event) => setEditingContent(event.target.value)}
+                          />
+                          <div className="row">
+                            <button type="button" onClick={onSaveComment}>保存修改</button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingCommentId("");
+                                setEditingContent("");
+                              }}
+                            >
+                              取消
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <MarkdownRenderer content={comment.content || ""} />
+                          <p className="meta">
+                            {comment.interviewerName || "面试官"} · {formatDate(comment.createdAt)}
+                          </p>
+                          {canManageComment(comment) && (
+                            <div className="row">
+                              <button type="button" onClick={() => onEditComment(comment)}>编辑</button>
+                              <button type="button" onClick={() => onDeleteComment(comment.id)}>删除</button>
+                            </div>
+                          )}
+                        </>
+                      )}
                     </div>
                     {index < comments.length - 1 && <div className="divider" />}
                   </div>
@@ -299,16 +369,18 @@ export default function CandidateDetail() {
               ) : (
                 <p className="meta">暂无评论</p>
               )}
-              <textarea
-                rows={3}
-                placeholder="写下评价或备注"
-                value={commentInput}
-                onChange={(event) => setCommentInput(event.target.value)}
-              />
-              <button type="button" onClick={submitComment}>提交评论</button>
-            </>
-          )}
-        </article>
+            <div className="divider" />
+            <textarea
+              rows={3}
+              placeholder="写下评价或备注"
+              value={commentInput}
+              onChange={(event) => setCommentInput(event.target.value)}
+              style={{ marginTop: "12px", marginBottom: "12px" }}
+            />
+            <button type="button" onClick={submitComment}>提交评论</button>
+          </>
+        )}
+      </article>
       </div>
     </section>
   );

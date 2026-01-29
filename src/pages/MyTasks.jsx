@@ -32,32 +32,34 @@ export default function MyTasks() {
     <section>
       <h1>我的任务</h1>
       {status && <p className="hint">{status}</p>}
-      {tasks.map((task) => (
-        <article key={task.id} className="card">
-          <h2>{task.title}</h2>
-          <div className="meta">分配人 {task.assignedBy} · {new Date(task.createdAt).toLocaleString()}</div>
-          <MarkdownRenderer content={task.description} />
-          <label className="full">
-            报告（支持 Markdown）
-            <textarea
-              rows={5}
-              value={report[task.id] || task.report || ""}
-              onChange={(event) =>
-                setReport((prev) => ({ ...prev, [task.id]: event.target.value }))
-              }
-            />
-          </label>
-          <div style={{ marginTop: "12px" }}>
-            <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
-          </div>
-          {task.report && (
-            <>
-              <h3>最新提交</h3>
-              <MarkdownRenderer content={task.report} />
-            </>
-          )}
-        </article>
-      ))}
+      <div className="grid single">
+        {tasks.map((task) => (
+          <article key={task.id} className="card">
+            <h2>{task.title}</h2>
+            <div className="meta">分配人 {task.assignedBy} · {new Date(task.createdAt).toLocaleString()}</div>
+            <MarkdownRenderer content={task.description} />
+            <label className="full">
+              报告（支持 Markdown）
+              <textarea
+                rows={5}
+                value={report[task.id] || task.report || ""}
+                onChange={(event) =>
+                  setReport((prev) => ({ ...prev, [task.id]: event.target.value }))
+                }
+              />
+            </label>
+            <div style={{ marginTop: "12px" }}>
+              <button type="button" onClick={() => submitReport(task.id)}>提交报告</button>
+            </div>
+            {task.report && (
+              <>
+                <h3>最新提交</h3>
+                <MarkdownRenderer content={task.report} />
+              </>
+            )}
+          </article>
+        ))}
+      </div>
       {!tasks.length && <p>暂无任务。</p>}
     </section>
   );

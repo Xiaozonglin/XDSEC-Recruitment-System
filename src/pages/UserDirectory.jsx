@@ -50,6 +50,7 @@ export default function UserDirectory() {
                   alt={user.nickname || "avatar"}
                 />
                 <div>
+                  <p className="meta">{user.email}</p>
                   <p className="meta">{user.signature || "暂无个性签名"}</p>
                 </div>
               </div>

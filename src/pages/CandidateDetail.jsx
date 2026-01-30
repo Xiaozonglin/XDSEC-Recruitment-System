@@ -220,39 +220,45 @@ export default function CandidateDetail() {
       <div className="grid single">
         <article className="card" onClick={(event) => onCardExpand(event, showTasks, setShowTasks)}>
           <div className="card-header">
-            <div className="row">
-              <img
-                className="avatar"
-                src={gravatarUrl(user.email, 72)}
-                alt={user.nickname || "avatar"}
-              />
-              <div className="stack-tight">
-                <h3>{user.nickname || user.email}</h3>
-                <div className="inline-meta">
-                  <span>{user.email}</span>
+            <div className="stack-tight">
+              <h3 className="card-title">{user.nickname || user.email}</h3>
+              <div className="row card-identity">
+                <img
+                  className="avatar"
+                  src={gravatarUrl(user.email, 72)}
+                  alt={user.nickname || "avatar"}
+                />
+                <div className="inline-meta stack-tight">
                   <span>{user.signature || "暂无个性签名"}</span>
+                  <span>{user.email}</span>
                 </div>
               </div>
             </div>
-            <div className="card-actions">
-              <select
-                value={user.status || "r1_pending"}
-                onChange={(event) => updateStatus(event.target.value)}
-              >
-                {STATUSES.map((item) => (
-                  <option key={item} value={item}>{STATUS_LABELS[item]}</option>
-                ))}
-              </select>
-              {user.role === "interviewee" && (
-                <button type="button" className="nowrap" onClick={promote}>设为面试官</button>
-              )}
-              <button type="button" className="nowrap" onClick={removeUser}>删除用户</button>
-            </div>
           </div>
-          <div className="card-body">
-            <p>面试状态：{STATUS_LABELS[user.status || "r1_pending"]}</p>
-            <p>方向：{displayDirections.join(", ") || "暂无"}</p>
-            <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
+          <div className="card-body info-row">
+            <div className="candidate-meta">
+              <p className="status-line">
+                面试状态：
+                <select
+                  value={user.status || "r1_pending"}
+                  onChange={(event) => updateStatus(event.target.value)}
+                >
+                  {STATUSES.map((item) => (
+                    <option key={item} value={item}>{STATUS_LABELS[item]}</option>
+                  ))}
+                </select>
+              </p>
+              <p>方向：{displayDirections.join(", ") || "暂无"}</p>
+              <p>通过方向：{(user.passedDirections || []).join(", ") || "暂无"}</p>
+            </div>
+            <div className="status-actions">
+              <div className="action-row">
+                {user.role === "interviewee" && (
+                  <button type="button" className="nowrap" onClick={promote}>设为面试官</button>
+                )}
+                <button type="button" className="nowrap" onClick={removeUser}>删除用户</button>
+              </div>
+            </div>
           </div>
         </article>
 
@@ -284,7 +290,7 @@ export default function CandidateDetail() {
                 </label>
               ))}
             </div>
-            <div className="form-actions">
+            <div className="form-actions align-right">
               <button type="button" onClick={updatePassed}>提交通过方向</button>
             </div>
           </div>
@@ -341,6 +347,7 @@ export default function CandidateDetail() {
             </div>
             {showApplication && (
               <div className="card-body">
+                <div className="content-gap-lg" />
                 <p><strong>姓名：</strong> {user.application.realName}</p>
                 <p><strong>手机号：</strong> {user.application.phone}</p>
                 <p><strong>性别：</strong> {user.application.gender === "male" ? "男" : "女"}</p>
@@ -364,6 +371,7 @@ export default function CandidateDetail() {
           </div>
           {showComments && (
             <>
+              <div className="content-gap-lg" />
               {comments.length > 0 ? (
                 comments.map((comment, index) => (
                   <div key={comment.id}>

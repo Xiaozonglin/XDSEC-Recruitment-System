@@ -791,7 +791,7 @@ button:disabled {
 }
 
 .content-gap {
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
 }
 
 .content-gap-lg {
@@ -803,6 +803,59 @@ button:disabled {
   flex-wrap: wrap;
   gap: var(--space-3);
   align-items: center;
+}
+
+.status-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  --action-btn-width: 120px;
+}
+
+.status-actions select {
+  width: calc(var(--action-btn-width) * 2 + var(--space-2));
+}
+
+.status-actions .action-row {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.status-actions .action-row button {
+  min-width: var(--action-btn-width);
+}
+
+.card-body.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.card-body.info-row .candidate-meta {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.card-body.info-row .status-actions {
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-line select {
+  width: 140px;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
 }
 
 .profile-shell {
@@ -1004,6 +1057,10 @@ button:disabled {
 
 .form-footer .align-right {
   margin-left: auto;
+}
+
+.form-actions.align-right {
+  justify-content: flex-end;
 }
 
 .nowrap {

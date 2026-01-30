@@ -88,6 +88,10 @@ export default function ManageTasks() {
     }
   };
 
+  const visibleItems = form.targetUserId
+    ? items.filter((task) => task.targetUserId === form.targetUserId)
+    : items;
+
   return (
     <section className="page">
       <div className="page-header">
@@ -162,7 +166,7 @@ export default function ManageTasks() {
       </form>
 
       <div className="grid single">
-        {items.map((task) => (
+        {visibleItems.map((task) => (
           <article key={task.id} className="card">
             <div className="card-header">
               <h3>{task.title}</h3>

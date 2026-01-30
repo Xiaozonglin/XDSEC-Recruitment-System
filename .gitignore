@@ -35,3 +35,7 @@ Thumbs.db
 # Backend source (local only)
 xdsec-join-2026-main/
 backend/
+AGENTS.md
+AGENTS.zh.md
+docs/api.backend.md
+docs/api.md

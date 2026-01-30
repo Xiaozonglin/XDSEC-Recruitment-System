@@ -347,7 +347,7 @@ export default function CandidateDetail() {
             </div>
             {showApplication && (
               <div className="card-body">
-                <div className="content-gap-lg" />
+                <div className="content-gap" />
                 <p><strong>姓名：</strong> {user.application.realName}</p>
                 <p><strong>手机号：</strong> {user.application.phone}</p>
                 <p><strong>性别：</strong> {user.application.gender === "male" ? "男" : "女"}</p>
@@ -371,7 +371,7 @@ export default function CandidateDetail() {
           </div>
           {showComments && (
             <>
-              <div className="content-gap-lg" />
+              <div className="content-gap" />
               {comments.length > 0 ? (
                 comments.map((comment, index) => (
                   <div key={comment.id}>

@@ -677,6 +677,7 @@ button.link-button {
   padding: 0;
   box-shadow: none;
   font-weight: 600;
+  border: none;
 }
 
 .link-button {
@@ -708,6 +709,7 @@ button:disabled {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  color: #B3B7BD;
 }
 
 .row {

@@ -299,7 +299,9 @@ export default function CandidateDetail() {
           </div>
           {showTasks && (
             <>
-              <Link to={`/interviewer/tasks?targetUserId=${id}`} className="link-button">去布置任务</Link>
+              <div className="content-gap-lg">
+                <Link to={`/interviewer/tasks?targetUserId=${id}`} className="link-button">去布置任务</Link>
+              </div>
               {tasks.length === 0 ? (
                 <p className="meta">暂无任务。</p>
               ) : (

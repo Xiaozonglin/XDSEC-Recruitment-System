@@ -794,6 +794,10 @@ button:disabled {
   margin-top: var(--space-5);
 }
 
+.content-gap-lg {
+  margin-bottom: var(--space-7);
+}
+
 .form-actions {
   display: flex;
   flex-wrap: wrap;

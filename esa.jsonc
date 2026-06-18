@@ -1,0 +1,9 @@
+{
+  "name": "xdsec-join-frontend",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "assets": {
+    "directory": "./dist",
+    "notFoundStrategy": "singlePageApplication"
+  }
+}

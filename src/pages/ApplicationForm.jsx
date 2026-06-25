@@ -197,7 +197,6 @@ export default function ApplicationForm() {
                       onChange={(event) => setForm({ ...form, resume: event.target.value })}
                     />
                   </label>
-                  <script async src="http://pic.xdsec.xiaozonglin.cn/sdk/pup.js" data-url="http://pic.xdsec.xiaozonglin.cn/upload" data-auto-insert="full-markdown-embed"></script>
                   <div className="divider" />
                   <MarkdownRenderer content={form.resume} />
                 </>

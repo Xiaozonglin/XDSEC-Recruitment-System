@@ -122,6 +122,7 @@ export default function ManageAnnouncements() {
             onChange={(event) => setForm({ ...form, content: event.target.value })}
             required
           />
+          <script async src="http://pic.xdsec.xiaozonglin.cn/sdk/pup.js" data-url="http://pic.xdsec.xiaozonglin.cn/upload" data-auto-insert="full-markdown-embed"></script>
         </label>
         <label>
           可见范围
